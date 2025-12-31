@@ -1,0 +1,126 @@
+
+<!-- Footer -->
+<footer class="bg-dark text-white mt-5">
+    <div class="container py-4">
+        <div class="row">
+            <!-- Column 1 -->
+            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                <h5 class="text-uppercase">About Us</h5>
+                <p>
+                    We are company dedicated to helping gig workers, like you,
+                    to keeping track with your vehicle's information.
+                </p>
+                <p><i>Vehicle info tracking made easy</i></p>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                <h5 class="text-uppercase">Legal Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/legal/privacy" class="text-white link">Privacy Policy</a></li>
+                    <li><a href="/legal/tos" class="text-white link">Terms of Service</a></li>
+                    <li><a href="/legal" class="text-white link">Legal Center</a></li>
+                    <p>Legal Email: <a href="mailto:legal@nexgenit.digital" class="text-white link">legal@nexgenit.digital</a></p>
+                </ul>
+            </div>
+            <!-- Column 3 -->
+            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                <h5 class="text-uppercase">Contact Us</h5>
+                <p>Email: <a href="" class="text-white link"></a></p>
+                <div>
+                    <p>
+                        Social Links:
+                    </p>
+                    <a href="https://twitter.com/NGISLLC"><i class="bi bi-twitter-x"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="bg-secondary text-center d-flex flex-column align-items-center p-4">
+            <div id="responseMessage"></div>
+            <p class="mb-0">Sign up for our newsletter!</p>
+            <p class="fs-6 text-white"><b>Note:</b> if the email for the newsletter is not associated with an account,</p>
+            <p class="fs-6 text-white">you will have to click <a href="/ui/guest/sub_manager.php" class="link text-white">Here</a> to manage the subscription.</p>
+            <form method="post" class="form-inline d-flex justify-content-center" id="newsSignUpForm">
+                <input type="email" class="form-control w-75 mr-2" name="foot_email" id="foot_email" placeholder="Your email">
+                <button class="btn btn-primary" type="submit" name="foot_subscribe" id="foot_subscribe" >Subscribe</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="bg-secondary text-center py-3">
+        <p class="mb-0">&copy; 2024 VehTrac, A Product By <a href='https://nexgenit.digital' class='text-white link'>NexGenIt Digital.</a> All rights reserved. <i>Made with the help of <a href='https://chatgpt.com' class="text-white link">ChatGPT</a></i></p>
+    </div>
+  </footer>
+<style>
+    #responseMessage{
+        background-color: white;
+    }
+    .link {
+        position: relative !important;
+        text-decoration: none !important;
+    }
+
+    .link::after {
+        content: '' !important;
+        position: absolute !important;
+        width: 0 !important;
+        height: 2px !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        background-color: #fff !important;
+        transition: width 0.3s !important;
+    }
+
+    .link:hover::after {
+        width: 100% !important;
+    }
+
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Handle form submission
+        $("#newsSignUpForm").submit(function (event) {
+            event.preventDefault();  // Prevent form from submitting normally and causing page reload
+
+            console.log('Form submission intercepted');  // Log to verify if we reached here
+
+            // Get the email value from the input field
+            var email = $("#foot_email").val();
+
+            // Check if email is empty
+            if (email === "") {
+                $("#responseMessage").html('<p class="text-danger">Please enter a valid email address.</p>');
+                return;  // Stop further execution if email is empty
+            }
+
+            // Perform AJAX request to the PHP script
+            $.ajax({
+                url: '/BackPhp/newsSignUp.php',  // The PHP file that will handle the request
+                type: 'POST',                    // Use POST method to send data
+                data: {
+                    foot_email: email,           // Send the email as POST data
+                    foot_subscribe: true         // Indicate the subscribe action was clicked
+                },
+                success: function(response) {
+                    console.log("Response from PHP: ", response);  // Log the response from PHP
+
+                    // On successful response from PHP, show the message in the #responseMessage div
+                    $("#responseMessage").html(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: ", status, error);  // Log any AJAX errors
+
+                    // Handle AJAX error (network issues, server down, etc.)
+                    $("#responseMessage").html('<p class="text-danger">An error occurred. Please try again later.</p>');
+                }
+            });
+        });
+    });
+</script>
+
+
+
