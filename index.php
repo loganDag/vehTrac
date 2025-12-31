@@ -3,7 +3,7 @@ require "../bootstrap.html";
 include "includes/header.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-
+echo 'test';
 $Cookie_security = $_GET["error"];
 if ($Cookie_security == "1") {
     echo "<div class='d-flex align-items-center justify-content-center'>";
