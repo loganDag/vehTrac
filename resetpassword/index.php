@@ -68,7 +68,7 @@ if (isset($_POST["reset_password"])) {
                 'From name'
             );
             $mail->addAddress($text_input);
-            $mail->Subject = "Dispatch OT Password reset Verification";
+            $mail->Subject = "Subject";
             $mail->Body = $Body;
             if (!$mail->send()) {
                 echo "<div class='d-flex align-items-center justify-content-center'>";
