@@ -65,8 +65,8 @@ if ($conn->query($sql) == false) {
             $Body .= "</html>";
 
             // Assuming you have initialized the $mail object earlier in your code
-            $mail->setFrom('no-reply@nexgenit.digital', 'NexGenIt contact');
-            $mail->addAddress('contact@nexgenit.digital');
+            $mail->setFrom('no-replyemail', 'contact name');
+            $mail->addAddress('email to adress');
             $mail->Subject = 'Newsletter submission';
             $mail->Body = $Body;
 
