@@ -18,7 +18,7 @@ require("$DocRoot/includes/menu.html");
         <div class="sessions">
            <p class="fs-4 text-muted">
                 <p>
-                    Display Sessions
+                    Display Session
             </p>
             </p>
         </div>
