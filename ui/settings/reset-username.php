@@ -1,4 +1,8 @@
 <?php
+/// This is the "Settings" page username reset feture.
+/// This will use the email from the session_start in order to change with the database
+/// The "Forgot Username" page will require the email in order to obtain, NOT reset, the username.
+
 // 1. Get the path to the 'vehtrac' folder (two levels up from /ui/settings/)
 $vehtracRoot = dirname(__DIR__, 2);
 
