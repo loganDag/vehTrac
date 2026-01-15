@@ -49,7 +49,7 @@ if ($result == TRUE){
 if (mysqli_num_rows($result)>=1){
     echo "<div class='d-flex align-items-center justify-content-center'>";
     echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Error</h3>";
-    echo "This car already exists in our system, if you need ownership transferred. Please contact <a href='https://support.nexgenit.digital'>Support</a></div></div>";
+    echo "This car already exists in our system, if you need ownership transferred. Please contact <a href='https://support..digital'>Support</a></div></div>";
 }
 else if (mysqli_num_rows($result)<1){
     $new_veh_uid = rand(1000,10000);
@@ -96,7 +96,6 @@ else if (mysqli_num_rows($result)<1){
     }
 }
 }
-
 ?>
 <!doctype html>
 <html lang="en">

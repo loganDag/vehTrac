@@ -1,8 +1,9 @@
 <?php
 require ("dbconnect.php");
-$UserID_Cookie = $_COOKIE["user_id"];
-$CookieID = $_COOKIE["cookie_id"];
-//$_SESSION
+//$UserID_Cookie = $_COOKIE["user_id"];
+//$CookieID = $_COOKIE["cookie_id"];
+$UserID_Cookie = $_SESSION["user_id"];
+$CookieID = $_SESSION["cookie_id"];
 
 if (!$UserID_Cookie){
     header('refresh:0; url=/index.php?error=2');

@@ -1,9 +1,16 @@
 <?php
-require "../bootstrap.html";
+$htmlRoot = dirname(__DIR__, 1);
+
+// 2. Include header and database using the calculated root
+//require_once $htmlRoot . "/cdn-files/bootstrap.html";
+require $htmlRoot."/cdn-files/bootstrap.html";
+//echo "$htmlRoot/cdn-files/bootstrap.html'";
 include "includes/header.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-echo 'test';
+
+session_start();
+
 $Cookie_security = $_GET["error"];
 if ($Cookie_security == "1") {
     echo "<div class='d-flex align-items-center justify-content-center'>";
@@ -116,6 +123,9 @@ if (isset($_POST["signin_button"])) {
             echo "</div>";
             setcookie("user_id", "$db_idnum", time() + 86400 * 10, "/");
             setcookie("cookie_id", "$cookie_set_id", time() + 86400 * 10, "/");
+            $_SESSION["user_id"] = $db_idnum;
+            $_SESSION["email"] = $db_email;
+            $_SESSION["cookie_id"] = $cookie_set_id;
             header('refresh:3; url=ui/dash');
         }
     }
@@ -180,7 +190,7 @@ if (isset($_POST["submit_register"])) {
                 echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Sign up issue</h3>";
                 echo "Unable to insert your information.<br></b>" .
                     $conn->error;
-                echo "Please <a href='mailto:support@nexgenit.digital?subject=VehTrac signup issue with db.'>Email Support Here</a></div>";
+                echo "Please <a href='mailto:contact@logandag.dev?subject=VehTrac signup issue with db.'>Email Support Here</a></div>";
             } else {
                 echo "<div class='alert alert-success text-center' role='alert'> <p>User created, please go to settings to finish your account.</p>";
                 echo "Please expect an email with your User UID and email with a welcome letter. Thank you again!</div>";
@@ -193,7 +203,7 @@ if (isset($_POST["submit_register"])) {
        We hope you enjoy your adventures with VehTrac and what it can do!
        </h4>
        <p>Your Unique ID is: $user_set_uid</p><br>
-       <p>Please go to the <a href='https://vehtrac.nexgenit.digital/settings.php'>Settings</a> page to finish setting up your account.</p>
+       <p>Please go to the <a href='https://vehtrac.logandag.dev/ui/settings'>Settings</a> page to finish setting up your account.</p>
        </body>
        </html>";
                 $mail->setFrom(
@@ -207,7 +217,7 @@ if (isset($_POST["submit_register"])) {
                     echo "<div class='d-flex align-items-center justify-content-center'>";
                     echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Sign up issue</h3>";
                     echo "Email not sent.<br>" . $mail->ErrorInfo . "<br></b>";
-                    echo "Please <a href='mailto:support@nexgenit.digital?subject=VehTrac signup email not sending.'>Email Support Here</a>";
+                    echo "Please <a href='mailto:contact@logandag.dev?subject=VehTrac signup email not sending.'>Email Support Here</a>";
                     echo "Your account is still made but the welcome email couldn't be sent, please send support an email to resolve this</div>";
                 } else {
                     echo "<div class='alert alert-success text-center' role='alert'> <p>Welcome Letter sent!</p></div>";
@@ -224,139 +234,148 @@ if (isset($_POST["submit_register"])) {
 $conn->close();
 ?>
 
-<html>
-    <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VehTrac | Home</title>
 
-        <title>VehTrac | Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Roboto', sans-serif; }
+        .separator {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #6c757d;
+        }
+        .separator::before, .separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .separator:not(:empty)::before { margin-right: .5em; }
+        .separator:not(:empty)::after { margin-left: .5em; }
+    </style>
 </head>
+
 <body data-bs-theme="<?php echo $theme; ?>">
-  <div class="container h-25 index_pos_container"></div>
-  <!--DIV BELOW WRAPS EVERYTHING UNTIL FOOTER TO ENSURE BEING CENTER OF SCREEN-->
-<div class="h-75 d-flex align-items-center justify-content-center">
-  <div class="container col-md-4 form_items">
-        <div class="jumbotron text-center">
-            <h1>VehTrac Login </h1>
-            <small class="form-text text-muted">Vehicle tracking software for gig workers.</small><br>
-          </div>
-      <div id="loading" style="display: none;">
-            <img src='includes/images/loading.gif' alt="Loading...">
-      </div>
-        <form action="" method="post" id="login_form">
-              <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" name='themeToggle' id="themeToggle" <?php if (
-                          $theme == "dark"
-                      ) {
-                          echo "checked";
-                      } ?>>
-                      <label class="form-check-label" for="themeToggle">Dark/light Mode</label>
-                  </div>
-                      <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="themeMemoryCookie" id="themeMemoryCookie">
-                              <label class="form-check-label" for="themeMemoryCookie">Remember Theme Choice for current session?</label>
-                     </div>
-                     <h3 class="text-muted">Sign in here:</h3>
-                <div class='form-floating'>
+
+<div class="container min-vh-100 d-flex flex-column justify-content-center align-items-center">
+    
+    <?php if ($Cookie_security): ?>
+        <div class='alert alert-danger text-center mb-4' role='alert'>
+            <h4 class='alert-heading'>Security Issue</h4>
+            <p class="mb-0">Error code: <?php echo htmlspecialchars($Cookie_security); ?>. Please try again.</p>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($login_success)): ?>
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+            <p class="mt-3">Signing you in...</p>
+        </div>
+    <?php else: ?>
+
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold">VehTrac</h1>
+            <p class="text-muted">Vehicle tracking software for gig workers.</p>
+        </div>
+
+        <div class="card shadow-sm border">
+            <div class="card-body p-4 p-sm-5">
+                <form action="" method="post" id="login_form">
                     
-                <input type='email' class='form-control <?php if (
-                    $LoginError == "1"
-                ) {
-                    echo " is-invalid";
-                } ?>' <?php if ($LoginError == "1") {
-    echo "value='$email'";
-} ?> id='Log_email' name='Log_email' placeholder='' required>
-                <label for='Log_email'>Email:</label>
-                <?php if ($LoginError == "1") {
-                    echo " <div class='invalid-feedback'>Invalid email or password.</div>";
-                } ?>
-                  </div>  
-                      <br>
-                <div class='form-floating'>
-                <input type='password' class='form-control <?php if (
-                    $LoginError == "1"
-                ) {
-                    echo " is-invalid";
-                } ?>' id='Log_password' name='Log_pass' placeholder='Enter password' required>
-                <label for='Log_password'>Password:</label>
-                <?php if ($LoginError == "1") {
-                    echo " <div class='invalid-feedback'>Invalid email or password.</div>";
-                } ?>
-               </div>
-               <br>
-                <div class="text-center form-row">
-                <button type="submit" class="btn btn-primary" name="signin_button">Sign In</button>
-                </div>
-        </form>
-          <div class="separator">Or</div>
-          <br>
+                    <div class="d-flex justify-content-between mb-4">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name='themeToggle' id="themeToggle" <?php echo ($theme == "dark") ? "checked" : ""; ?>>
+                            <label class="form-check-label small" for="themeToggle">Dark Mode</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="themeMemoryCookie" id="themeMemoryCookie">
+                            <label class="form-check-label small" for="themeMemoryCookie">Save Choice</label>
+                        </div>
+                    </div>
 
-  <!-- Button trigger modal -->
-  <div class="form-row text-center">
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign_up">
-  Sign up </button>
-      <a href="/resetpassword" class="btn btn-primary" role="button">Reset Password</a>
+                    <h4 class="mb-3 fw-normal text-secondary">Sign in</h4>
 
-  </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control <?php echo ($LoginError == '1') ? 'is-invalid' : ''; ?>" 
+                               id="Log_email" name="Log_email" placeholder="name@example.com" required 
+                               value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>">
+                        <label for="Log_email">Email address</label>
+                    </div>
 
-  </div>
-  <!--Modal-->
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control <?php echo ($LoginError == '1') ? 'is-invalid' : ''; ?>" 
+                               id="Log_password" name="Log_pass" placeholder="Password" required>
+                        <label for="Log_password">Password</label>
+                        <?php if ($LoginError == "1"): ?>
+                            <div class="invalid-feedback">Invalid email or password.</div>
+                        <?php endif; ?>
+                    </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="sign_up" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="SignUpLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">VehTrac | Sign up</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <form action="" method="post">
-            <div class='form-floating'>
-                <input type='email' class='form-control' id='signup_email' name='signup_email' placeholder='Enter email...' required>
-                <label for='signup_email'>Enter email:</label>
+                    <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="signin_button">Sign In</button>
+                    
+                    <div class="separator my-3">Or</div>
+
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#sign_up">Create Account</button>
+                        <a href="/resetpassword" class="btn btn-link btn-sm text-decoration-none">Forgot Password?</a>
+                    </div>
+                </form>
             </div>
-                      <br>
-            <div class='form-floating'>
-                <input type='password' class='form-control' id='signup_pass' name='signup_pass' placeholder='Enter password...' required>
-                <label for='signup_pass'>Enter your password:</label>
-            </div>
-            <br>
-            <div class='form-floating'>
-                <input type='password' class='form-control' id='signup_confpass' name='signup_confpass' placeholder='Please confirm password..' required>
-                <label for='signup_confpass'>Confirm your password:</label>
-            </div>
-            <!--end modal body-->
-          </div>    
-        <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="submit_register">Sign Up</button>
-      </form>
-
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
+        </div>
     </div>
-  </div>
-  </div>
-    <!--end modal-->
+    <?php endif; ?>
 </div>
-<!--END ENTIRE BODY DIV WITH DIV TAG ABOVE-->
-<div class="container h-25"></div>
+
+<div class="modal fade" id="sign_up" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create your account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="post">
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" name="signup_email" placeholder="..." required>
+                        <label>Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" name="signup_pass" placeholder="..." required>
+                        <label>Password</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" name="signup_confpass" placeholder="..." required>
+                        <label>Confirm Password</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="submit_register" class="btn btn-primary">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Theme Toggle Script
+    document.getElementById('themeToggle').addEventListener('change', function() {
+        const theme = this.checked ? 'dark' : 'light';
+        document.body.setAttribute('data-bs-theme', theme);
+    });
+</script>
+
 <?php require "includes/footer.html"; ?>
 </body>
-    <script>
-        // Function to toggle between dark and light themes
-        function toggleTheme() {
-            const body = document.body;
-            const newTheme = themeToggleSwitch.checked ? 'dark' : 'light';
-
-            // Toggle the theme
-            body.setAttribute('data-bs-theme', newTheme);
-        }
-
-        // Get the theme toggle switch element
-        const themeToggleSwitch = document.getElementById('themeToggle');
-
-        // Add an event listener to the theme toggle switch
-        themeToggleSwitch.addEventListener('change', toggleTheme);
-
-    </script>
-
 </html>

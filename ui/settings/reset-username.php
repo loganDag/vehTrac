@@ -12,7 +12,7 @@ require_once $vehtracRoot . "/includes/header.php";
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
+$user_email = $_SESSION["email"];
 // Placeholder message variable
 $message = "";
 
