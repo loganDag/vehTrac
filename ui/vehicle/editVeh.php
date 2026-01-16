@@ -1,10 +1,10 @@
 <?php
-require ("../bootstrap.html");
-require ("includes/header.php");
-require ("includes/cookieCheck.php");
-require ("includes/menu.html");
+$DocRoot = $_SERVER["DOCUMENT_ROOT"];
+require("$DocRoot/includes/header.php");
+require("$DocRoot/includes/cookieCheck.php");
+require("$DocRoot/includes/menu.html");
 $VehUIDUrl = $_GET["uid"];
-$Cookie_user_id = $_COOKIE["user_id"];
+$Cookie_user_id = $_SESSION["cookie_id"];
 
 $VehSecureSQL = "SELECT * FROM user_vehicles WHERE veh_uid=('$VehUIDUrl')";
 $VehSecureResult = $conn->query($VehSecureSQL);
@@ -16,6 +16,8 @@ $Vehsql = "SELECT * FROM vehicles WHERE veh_uid=('$VehUIDUrl')";
 $VehResult = $conn->query($Vehsql);
 while($VehInfo = $VehResult->fetch_assoc()){
     $user_id = $VehInfo["user_uid"];
+    $VehLongInfo = $VehInfo["year"]. " "  .$VehInfo["make"]. ""  . $VehInfo["model"];
+    
 }
 ?>
 <html>
@@ -23,7 +25,7 @@ while($VehInfo = $VehResult->fetch_assoc()){
     <title>VehTrac | Edit your vehicle info</title>
         </head>
         <body data-bs-theme="<?php echo $theme;?>">
-<h3 class="text-muted">Editing Vehicle <?php echo $VehMake;?></h3>
+<h3 class="text-muted">Editing Vehicle <?php echo $VehLongInfo;?></h3>
 <div class="main_site_content">
 
 
