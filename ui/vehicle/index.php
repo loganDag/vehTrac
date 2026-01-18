@@ -1,6 +1,5 @@
 <?php
 $DocRoot = $_SERVER["DOCUMENT_ROOT"];
-//require("$DocRoot/../bootstrap.html");
 require("$DocRoot/includes/header.php");
 require("$DocRoot/includes/cookieCheck.php");
 require("$DocRoot/includes/menu.html");

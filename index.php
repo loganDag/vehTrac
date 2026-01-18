@@ -4,7 +4,6 @@ $htmlRoot = dirname(__DIR__, 1);
 // 2. Include header and database using the calculated root
 require $htmlRoot . "/cdn-files/bootstrap.html";
 include "includes/header.php";
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
