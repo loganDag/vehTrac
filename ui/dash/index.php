@@ -1,100 +1,99 @@
 <?php
-$DocRoot= $_SERVER["DOCUMENT_ROOT"];
+session_start();
+$DocRoot = $_SERVER["DOCUMENT_ROOT"];
 require ("$DocRoot/includes/header.php");
 require ("$DocRoot/../bootstrap.html");
-require ("$DocRoot/includes/cookieCheck.php");
 require ("$DocRoot/includes/menu.html");
-$SQLError = $_GET['e'];
-$DeleteError = $_GET['de'];
 
-if ($DriveCount > 20){
-    $DriveCount = "20+";
+// 1. Securely fetch session data
+$UserID_Cookie = $_SESSION["user_id"] ?? null;
+$CookieID = $_SESSION["cookie_id"] ?? null;
+
+if (!$UserID_Cookie) {
+    header('Location: /index.php?error=2');
+    exit;
 }
 
-$VehTableCarQuery_del_stat = '0';
-$VehTableCarQuery = "SELECT * FROM vehicles WHERE del_stat='$VehTableCarQuery_del_stat'";
-
-// Execute the query
-$VehTableCarQueryResult = mysqli_query($conn, $VehTableCarQuery);
-
-// Check if the query was successful
-if ($VehTableCarQueryResult) {
-    // Check if there are any rows returned
-    if (mysqli_num_rows($VehTableCarQueryResult) > 0) {
-        // Fetch the first row of the result
-        $vehTableData = mysqli_fetch_assoc($VehTableCarQueryResult);
-        $vehTable_uid = $vehTableData["veh_uid"];
-        // Now you can use $vehTable_uid as needed
-    }
+if (!$CookieID) {
+    header('Location: /index.php?error=3');
+    exit;
 }
-$UserCarNumQuery = "SELECT * FROM user_vehicles WHERE veh_uid=('$vehTable_uid') AND user_uid = ('$UserID_Cookie')";
 
-if ($UserCarNumResult = mysqli_query($conn, $UserCarNumQuery)){
-    $CarNumber = mysqli_num_rows($UserCarNumResult);
-}
-if ($CarNumber <= 0){
-$CarNumber = "0";
-}
-if (isset($_POST['add_vehicle'])){
-$new_vin = $_POST['vin'];
-$new_veh_year = $_POST['model_year'];
-$new_veh_make = $_POST['make'];
-$new_veh_model = $_POST['model'];
-$new_veh_color = $_POST['color'];
-$del_stat = '0';
+// 2. Initial Vehicle Query (Using Prepared Statement)
+$vehTable_uid = null;
+$del_stat_val = '0';
+$stmt = $conn->prepare("SELECT veh_uid FROM vehicles WHERE del_stat = ? LIMIT 1");
+$stmt->bind_param("s", $del_stat_val);
+$stmt->execute();
+$result = $stmt->get_result();
 
-$sql = "SELECT * FROM vehicles WHERE vin=('$new_vin')";
-$result = $conn->query($sql);
-if ($result == TRUE){
-if (mysqli_num_rows($result)>=1){
-    echo "<div class='d-flex align-items-center justify-content-center'>";
-    echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Error</h3>";
-    echo "This car already exists in our system, if you need ownership transferred. Please contact <a href='https://support..digital'>Support</a></div></div>";
+if ($row = $result->fetch_assoc()) {
+    $vehTable_uid = $row["veh_uid"];
 }
-else if (mysqli_num_rows($result)<1){
-    $new_veh_uid = rand(1000,10000);
-    $sql= "SELECT * FROM vehicles WHERE veh_uid=('$new_veh_uid')";
-    $result = $conn->query($sql);
-   while($ResultsQuery = mysqli_fetch_array($result)){
-      $veh_uid_result = $ResultsQuery["veh_uid"];
-   }
-    while ($veh_uid_result !=0){
-      $new_veh_uid = rand(1000,10000);
-      $ResultsQuery = mysqli_fetch_array($result);
-    }
-    $date = date("M-d-Y  H:i:s");
-        $sql = "INSERT INTO vehicles (veh_uid, make, model, year, color, vin, del_stat, date_added) VALUES ('".$new_veh_uid."', '".$new_veh_make."', '".$new_veh_model."', '".$new_veh_year."', '".$new_veh_color."', '".$new_vin."', '".$del_stat."', '".$date."')";
-        $InsertResult = $conn->query($sql);
-        if ($InsertResult == TRUE){
-           $VehID = $new_veh_uid;
-            if ($VehID){
-                    $UVSql = "INSERT INTO user_vehicles (veh_uid, user_uid) VALUES ('".$new_veh_uid."', '".$UserID_Cookie."')";
-                    $UVResult = $conn->query($UVSql);
-                    if ($UVResult == TRUE){
-                        echo "<div class='alert alert-success text-center' role='alert'> <p>Vehicle created!</p>";
-                        echo "You can now start using this vehicle!</div>";
-                        header('refresh:3; url=dash.php');
-                    }   
-                    else if ($UVResult == FALSE){
-                        echo "<div class='align-items-center justify-content-center'>";
-                        echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Logging issue</h3>";
-                        echo "Unable to make you the owner" .$sql."<br></b>" . $conn->error;
-                        echo "Please <a href='mailto:support@nexgenit.digital?subject=SQL ownership insert'>Email Support Here</a></div>";
-                    }   
-            }else if (!$VehID){
-                echo "<div class='align-items-center justify-content-center'>";
-                echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Logging issue</h3>";
-                echo "Vehicle ID variable not set. The vehicle has been created, we were unable to make you as the owner.";
-                echo "Please <a href='mailto:support@nexgenit.digital?subject=SQL Vehicle ID variable not set for user vehicles table'>Email Support Here</a></div>";
+
+// 3. Get Car Count for this user
+$CarNumber = 0;
+if ($vehTable_uid) {
+    $stmt = $conn->prepare("SELECT count(*) as total FROM user_vehicles WHERE veh_uid = ? AND user_uid = ?");
+    $stmt->bind_param("ss", $vehTable_uid, $UserID_Cookie);
+    $stmt->execute();
+    $countRes = $stmt->get_result()->fetch_assoc();
+    $CarNumber = $countRes['total'];
+}
+
+// 4. Handle Form Submission
+if (isset($_POST['add_vehicle'])) {
+    $new_vin = $_POST['vin'];
+    $new_veh_year = $_POST['model_year'];
+    $new_veh_make = $_POST['make'];
+    $new_veh_model = $_POST['model'];
+    $new_veh_color = $_POST['color'];
+    $del_stat = '0';
+
+    // Check if VIN exists
+    $stmt = $conn->prepare("SELECT vin FROM vehicles WHERE vin = ?");
+    $stmt->bind_param("s", $new_vin);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($res->num_rows >= 1) {
+        echo "<div class='alert alert-danger text-center'>This car already exists. Contact Support.</div>";
+    } else {
+        // Generate UNIQUE random UID
+        $new_veh_uid = null;
+        $is_unique = false;
+        while (!$is_unique) {
+            $temp_uid = rand(1000, 10000);
+            $stmt = $conn->prepare("SELECT veh_uid FROM vehicles WHERE veh_uid = ?");
+            $stmt->bind_param("i", $temp_uid);
+            $stmt->execute();
+            if ($stmt->get_result()->num_rows == 0) {
+                $new_veh_uid = $temp_uid;
+                $is_unique = true;
             }
-        }else if ($InsertResult== FALSE){
-            echo "<div class='align-items-center justify-content-center'>";
-            echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Logging issue</h3>";
-            echo "Unable to insert your vehicle." .$sql."<br></b>" . $conn->error;
-            echo "Please <a href='mailto:support@nexgenit.digital?subject=SQL Vehicle insert.'>Email Support Here</a></div>";
+        }
+
+        $date = date("M-d-Y H:i:s");
+
+        // Insert new vehicle
+        $stmt = $conn->prepare("INSERT INTO vehicles (veh_uid, make, model, year, color, vin, del_stat, date_added) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("isssssss", $new_veh_uid, $new_veh_make, $new_veh_model, $new_veh_year, $new_veh_color, $new_vin, $del_stat, $date);
+        
+        if ($stmt->execute()) {
+            // Link vehicle to user
+            $stmt = $conn->prepare("INSERT INTO user_vehicles (veh_uid, user_uid) VALUES (?, ?)");
+            $stmt->bind_param("is", $new_veh_uid, $UserID_Cookie);
+            
+            if ($stmt->execute()) {
+                echo "<div class='alert alert-success text-center'>Vehicle created and linked to your account!</div>";
+                header('refresh:3; url=dash.php');
+            } else {
+                echo "<div class='alert alert-danger'>Linked failed: " . $conn->error . "</div>";
+            }
+        } else {
+            echo "<div class='alert alert-danger'>Insert failed: " . $conn->error . "</div>";
         }
     }
-}
 }
 ?>
 <!doctype html>

@@ -1,5 +1,5 @@
 <?php
-$UserID_Cookie = $_COOKIE["user_id"];
+$UserID_Cookie = $_SESSION["user_id"];
 $UserInfoQuery = "SELECT * FROM user_info WHERE user_uid=('$UserID_Cookie')";
 $GetInfoQuery= $conn->query($UserInfoQuery);
 while($UserInfo = mysqli_fetch_array($GetInfoQuery)){
