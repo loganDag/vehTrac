@@ -6,7 +6,7 @@ one of my advanced projects to date. I was orginally going to keep it private, t
 
 
 ### Social
-There are many ways to keep up with everyone, you can use the discord [Here](https://discord.com/invite/ZdZ6VAEgtZ) along with the discussions tab as well. We also have a Telegram update Channel [Here.](https://t.me/LDDtelegram) for more.
+There are many ways to keep up with everyone, you can use the discord [Here](https://discord.com/invite/ZdZ6VAEgtZ) along with the discussions tab as well. We also have a Telegram update Channel [Here](https://t.me/LDDtelegram) for more.
 
 
 ### Stats:
