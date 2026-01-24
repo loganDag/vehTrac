@@ -13,6 +13,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $user_email = $_SESSION["email"];
+
+
 // Placeholder message variable
 $message = "";
 
@@ -48,13 +50,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $result = $stmt->get_result();
 
             if ($result->num_rows === 0) {
+                $stmt = $conn->prepare("UPDATE user_info SET username = ? WHERE email = ?");
+                $stmt -> bind_param("ss", $cleanUsername, $user_email);
+                $ConnResult = $stmt->execute();
+            if ($ConnResult){
                 // Logic to update username would go here
                 $message = "Username reset successfully to: " . htmlspecialchars($cleanUsername);
+            }else{
+                $message = "Username was not able to be changed.";
+            }
             } else {
                 $message = "Username is taken, please choose another one.";
             }
         }
     }
+    $conn->close();
 }
 
 ?>
