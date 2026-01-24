@@ -12,12 +12,15 @@ while($VehSecureInfo = $VehSecureResult->fetch_assoc()){
 
 }
 
-$Vehsql = "SELECT * FROM vehicles WHERE veh_uid=('$VehUIDUrl')";
-$VehResult = $conn->query($Vehsql);
+$stmt = $conn->prepare("SELECT * FROM vehicles WHERE veh_uid= ?");
+$stmt->bind_param("s", $VehUIDUrl);
+$stmt->execute();
+$VehResult = $stmt->get_result();
+if ($VehResult->num_rows > 0){
 while($VehInfo = $VehResult->fetch_assoc()){
     $user_id = $VehInfo["user_uid"];
-    $VehLongInfo = $VehInfo["year"]. " "  .$VehInfo["make"]. ""  . $VehInfo["model"];
-    
+    $VehLongInfo = $VehInfo["year"]. " "  .$VehInfo["make"]. " "  . $VehInfo["model"];
+}
 }
 ?>
 <html>

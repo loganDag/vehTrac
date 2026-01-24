@@ -50,8 +50,8 @@ if ($stmt = $conn->prepare($CarInfoGSql)) {
                         echo " <td>$dis_veh_model</td>";
                         echo " <td>$dis_veh_year</td>";
                         echo "<td>$dis_veh_uid</td>";
-                        echo "<td><a href='drive.php?uid=".htmlspecialchars($dis_veh_uid)."'>Add Drive</a></td>";
-                        echo "<td><a href='vehicles.php?uid=".htmlspecialchars($dis_veh_uid)."'>Edit Vehicle</a></td>";
+                        echo "<td><a href='/ui/drive/index.php?uid=".htmlspecialchars($dis_veh_uid)."'>Add Drive</a></td>";
+                        echo "<td><a href='/ui/vehicle/editVeh.php?uid=".htmlspecialchars($dis_veh_uid)."'>Edit Vehicle</a></td>";
                         echo "</tr>";
                     } 
                       
