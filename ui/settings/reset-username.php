@@ -32,6 +32,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } elseif ($confPassword !== $accPassword) {
         $message = "Passwords DO NOT match, please try again.";
     } else {
+
+        $stmt = $conn->prepare("SELECT password FROM user_info WHERE email = ? ");
+        $stmt->bind_param("s", $user_email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $PassInfo = $result->fetch_assoc();
+
+        $db_password = $PassInfo["password"];
+
+        if (password_verify($accPassword, $db_password)){
         // 3. Apply Alphanumeric Filter
         // This removes everything except a-z, A-Z, and 0-9
         $cleanUsername = preg_replace('/[^a-zA-Z0-9]/', '', $rawUsername);
@@ -63,6 +73,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $message = "Username is taken, please choose another one.";
             }
         }
+    }else{
+        $message = "Password does not match what we have in the database.";
+        } // end password hash check
     }
     $conn->close();
 }
