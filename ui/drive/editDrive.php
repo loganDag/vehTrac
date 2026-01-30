@@ -1,15 +1,15 @@
 
 <?php
-require ("includes/header.php");
-require ("../bootstrap.html");
-require ("includes/cookieCheck.php");
-require ("includes/menu.html");
+$DocRoot = $_SERVER["DOCUMENT_ROOT"];
+require ("$DocRoot/includes/header.php");
+require ("$DocRoot/includes/cookieCheck.php");
+require ("$DocRoot/includes/menu.html");
 $SetDriveID = $_GET["uid"];
 
 if (!isset($SetDriveID)){
   header('refresh:0; url=drive.php');
 }
-
+else{
 $sql = "SELECT * FROM drives WHERE ran_id = ('$SetDriveID')";
 $result = $conn->query("$sql");
 if ($result == TRUE){
@@ -45,7 +45,7 @@ if ($Update == TRUE){
 
   $conn->close();
 }//END UPDATE STATEMENT
-
+}
 if (isset($_POST['drive_back'])){
   header('refresh:0; url=drive.php');
 }

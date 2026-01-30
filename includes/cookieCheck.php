@@ -1,14 +1,18 @@
 <?php
 require ("dbconnect.php");
-//$UserID_Cookie = $_COOKIE["user_id"];
-//$CookieID = $_COOKIE["cookie_id"];
 $UserID_Cookie = $_SESSION["user_id"];
 $CookieID = $_SESSION["cookie_id"];
 
-if (!$UserID_Cookie){
+if (isset($_SESSION["user_id"])){
+    $UserID_Cookie = $_SESSION["user_id"];
+}else{
     header('refresh:0; url=/index.php?error=2');
 }
-if (!$CookieID){
+
+if (isset($_SESSION["cookie_id"])){
+    $CookieID = $_SESSION["cookie_id"];
+
+}else{
     header('refresh:0; url=/index.php?error=3');
 }
 $CookieValidQuery = "SELECT * FROM user_logins WHERE cookie_id=('$CookieID')";

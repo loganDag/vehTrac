@@ -1,6 +1,5 @@
 <?php
 $DocRoot = $_SERVER["DOCUMENT_ROOT"];
-require("$DocRoot/../bootstrap.html");
 require("$DocRoot/includes/header.php");
 require("$DocRoot/includes/cookieCheck.php");
 require("$DocRoot/includes/menu.html");
@@ -66,7 +65,7 @@ if (isset($_POST["submit_drive"])) {
           <p class="text-muted">You have <?php echo $DriveCount; ?> Drive(s) entered</p>
           <p class="text-muted">You have <?php echo $TotalMiles; ?> Miles driven</p>
           <p class='text-primary'>Your vehicles in our system</p>
-          <?php include("BackPhp/DriveVehList.php"); ?>
+          <?php require ("$DocRoot/BackPhp/DriveVehList.php"); ?>
         </div>
       </div>
       <div class='col-lg-6'>
@@ -102,7 +101,8 @@ if (isset($_POST["submit_drive"])) {
                   echo " <td>$dis_drive_reason</td>";
                   echo "<td><a href='vehicles.php?uid=" . htmlspecialchars($dis_drive_uid) . "'>$dis_drive_uid</a></td>";
                   echo "<td>$dis_drive_date</td>";
-                  echo "<td><button type='button' class='btn btn-secondary' onclick=edit('$drive_db_id');>Edit Drive ID: $drive_db_id</button> </td>";
+                 // echo "<td><button type='button' class='btn btn-secondary' onclick='myFunction($drive_db_id)'>Edit Drive ID: $drive_db_id</button> </td>";
+                 echo "<td><a href='https://vehtrac.logandag.dev/ui/drive/editDrive.php?uid=$drive_db_id'>Edit $drive_db_id</a></td>";
                   echo "</tr>";
                 }
               }
@@ -305,13 +305,14 @@ DeleteDriveError.show();
   }
   ?>
 </body>
-<?php require("includes/footer.html"); ?>
+<?php require("$DocRoot/includes/footer.html"); ?>
 <script type="text/javascript">
-  function edit(DriveDbID) {
-    var url = "https://vehtrac.nexgenit.digital/editDrive.php?uid=" + DriveDbID;
-    window.location.href = url;
 
-  }
+//function myFunction(DriveID) {
+  //  var url = "https://vehtrac.logandag.dev/ui/drive/editDrive.php?uid=" + DriveID;
+  //  window.location.href = url;
+//}
+
 </script>
 
 </html>

@@ -2,18 +2,22 @@
 require ('dbconnect.php');
 if (isset($_POST['delete_drive'])){
 $RemoveID = $_POST['delete_drive_id'];
-$sql = "SELECT * FROM drives WHERE ran_id=('$RemoveID')";
-$result = $conn->query($sql);
-if ($result->num_rows <= 0){
-    header('refresh:0; url=/drive.php?de=1&db_id='.$RemoveID);
+$stmt = $conn->prepare("SELECT * FROM drives WHERE ran_id= ?");
+$stmt->bind_param("s", $RemoveID);
+$stmt->execute();
+$result = $stmt->get_result();
+$ResultQuery = $result->fetch_assoc();
+
+if ($ResultQuery){
+    header('refresh:0; url=/ui/drive/index.php?de=1&db_id='.$RemoveID);
 }else{
     $sql = "DELETE FROM drives WHERE ran_id=('$RemoveID')";
     $result = $conn->query($sql);
     if ($result == TRUE){
-        header('refresh:0; url=/drive.php?de=2');
+        header('refresh:0; url=/ui/drive/index.phpde=2');
     }else if ($result == FALSE){
         $connError = $sql . $conn->error;
-        header('refresh:0; url=/drive.php?e='.$connError);
+        header('refresh:0; url=/ui/drive/index.php?e='.$connError);
     }
 }
 }
