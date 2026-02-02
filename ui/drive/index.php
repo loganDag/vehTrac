@@ -27,15 +27,6 @@ if (isset($_POST["submit_drive"])) {
     $ResultsQuery = mysqli_fetch_array($result);
   }
 
-
-
-
-
- /* if (isset($SetVehID)) {
-    $DriveVehUID = $SetVehID;
-  } else {
-    $DriveVehUID = $_POST["veh_uid_enter"];
-  }*/
   $DriveVehUID = $_POST["veh_uid_enter"];
   $DriveTime = date("M-d-Y H:i:s", strtotime($_POST["drive_time"]));
 
@@ -44,7 +35,7 @@ if (isset($_POST["submit_drive"])) {
     echo "<div class='align-items-center justify-content-center'>";
     echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Logging issue</h3>";
     echo "Unable to insert your information." . $sql . "<br></b>" . $conn->error;
-    echo "Please <a href='mailto:support@nexgenit.digital?subject=SQL Drive Logging Issue.'>Email Support Here</a></div>";
+    echo "Please <a href='mailto:support@logandag.dev?subject=SQL Drive Logging Issue.'>Email Support Here</a></div>";
   } else {
     header('refresh:0; url=drive.php');
   }
@@ -125,7 +116,7 @@ if (isset($_POST["submit_drive"])) {
           </button>
           <div class="form-control dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <div class="form-floating">
-              <form action="BackPhp/DriveDelete.php" method="post" class="form-control-sm form-floating">
+              <form action="/BackPhp/DriveDelete.php" method="post" class="form-control-sm form-floating">
                 <input type="text" class="form-control" id="delete_drive_id" name="delete_drive_id" placeholder='Enter drive ID to delete:'>
                 <label for='delete_drive_id'>Enter drive ID to delete:</label>
                 <br>
@@ -293,6 +284,7 @@ SQLError.show();
 keyboard: false
 });
 DeleteDriveSuccess.show();
+event.preventDefault();
   </script>";
   }
   if ($DeleteError == '1') {
@@ -306,13 +298,5 @@ DeleteDriveError.show();
   ?>
 </body>
 <?php require("$DocRoot/includes/footer.html"); ?>
-<script type="text/javascript">
-
-//function myFunction(DriveID) {
-  //  var url = "https://vehtrac.logandag.dev/ui/drive/editDrive.php?uid=" + DriveID;
-  //  window.location.href = url;
-//}
-
-</script>
 
 </html>
