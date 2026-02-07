@@ -17,8 +17,8 @@
                     <li class="nav-item"><a class="nav-link nav-item text-muted Off_menu_link" href='/ui/drive'><i class="bi bi-arrow-right-circle"></i> Drives</a></li> 
                      <li class= "nav-item"><a class="nav-link nav-item text-muted Off_menu_link" href='/ui/logout'><i class="bi bi-arrow-right-circle"></i> Logout</a></li>
              </ul>
-             <p class="text-muted">VehTrac, NexGenit Services LLC 2024 &copy;</p>
-             <p class="text-muted">A <a href='https://nexgenit.digital' target="__blank" class='Off_menu_link'>NexGenit Services (NGIS), LLC</a> product
+            <!-- <p class="text-muted">VehTrac, NexGenit Services LLC 2024 &copy;</p>
+             <p class="text-muted">A <a href='https://nexgenit.digital' target="__blank" class='Off_menu_link'>NexGenit Services (NGIS), LLC</a> product</p>-->
    <!--End offcanvas body div below-->
      </div>
 </div>

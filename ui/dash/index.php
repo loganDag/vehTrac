@@ -2,7 +2,6 @@
 session_start();
 $DocRoot = $_SERVER["DOCUMENT_ROOT"];
 require ("$DocRoot/includes/header.php");
-require ("$DocRoot/../bootstrap.html");
 require ("$DocRoot/includes/menu.html");
 
 // 1. Securely fetch session data
@@ -22,8 +21,8 @@ if (!$CookieID) {
 // 2. Initial Vehicle Query (Using Prepared Statement)
 $vehTable_uid = null;
 $del_stat_val = '0';
-$stmt = $conn->prepare("SELECT veh_uid FROM vehicles WHERE del_stat = ? LIMIT 1");
-$stmt->bind_param("s", $del_stat_val);
+$stmt = $conn->prepare("SELECT veh_uid FROM user_vehicles WHERE user_uid = ?");
+$stmt->bind_param("s", $UserID_Cookie);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -34,8 +33,8 @@ if ($row = $result->fetch_assoc()) {
 // 3. Get Car Count for this user
 $CarNumber = 0;
 if ($vehTable_uid) {
-    $stmt = $conn->prepare("SELECT count(*) as total FROM user_vehicles WHERE veh_uid = ? AND user_uid = ?");
-    $stmt->bind_param("ss", $vehTable_uid, $UserID_Cookie);
+    $stmt = $conn->prepare("SELECT count(*) as total FROM user_vehicles WHERE user_uid = ?");
+    $stmt->bind_param("s", $UserID_Cookie);
     $stmt->execute();
     $countRes = $stmt->get_result()->fetch_assoc();
     $CarNumber = $countRes['total'];
@@ -50,6 +49,9 @@ if (isset($_POST['add_vehicle'])) {
     $new_veh_color = $_POST['color'];
     $del_stat = '0';
 
+      if (strlen($new_vin) < 17 && $new_veh_year > 1980){
+        echo "<div class='alert alert-danger text-center'>Vin must be 17 characters or vehicle must be 1980 or older.</div>";
+      }else{
     // Check if VIN exists
     $stmt = $conn->prepare("SELECT vin FROM vehicles WHERE vin = ?");
     $stmt->bind_param("s", $new_vin);
@@ -85,16 +87,17 @@ if (isset($_POST['add_vehicle'])) {
             $stmt->bind_param("is", $new_veh_uid, $UserID_Cookie);
             
             if ($stmt->execute()) {
-                echo "<div class='alert alert-success text-center'>Vehicle created and linked to your account!</div>";
-                header('refresh:3; url=dash.php');
+                echo "<div class='alert alert-success text-center'>Vehicle created and linked to your account! Refreshing Page.</div>";
+                header('refresh:3; url=index.php');
             } else {
                 echo "<div class='alert alert-danger'>Linked failed: " . $conn->error . "</div>";
             }
         } else {
             echo "<div class='alert alert-danger'>Insert failed: " . $conn->error . "</div>";
-        }
+      }
     }
-}
+  }
+} //END "Add Vehicle"
 ?>
 <!doctype html>
 <html lang="en">
@@ -154,10 +157,6 @@ if (isset($_POST['add_vehicle'])) {
             <div class="form-floating">
                 <input type='text' class='form-control' id="vin" name="vin" placeholder='' required>
                 <label for='vin'>Please Enter your vin (must be 17 characters)</label>
-            </div>
-            <div class="form-check form-switch">
-                <input type='checkbox' class='form-check-input' name='vin_bypass' id='vin_bypass'>
-                <label for='vin_bypass' class='form-check-label'>Check this if Vehicle year is 1981 or earlier for vin bypass</label>
             </div>
             <div class="form-floating">
                 <input type='text' class='form-control' id="model_year" name="model_year" placeholder='' required>
