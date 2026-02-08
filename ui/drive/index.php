@@ -3,13 +3,16 @@ $DocRoot = $_SERVER["DOCUMENT_ROOT"];
 require("$DocRoot/includes/header.php");
 require("$DocRoot/includes/cookieCheck.php");
 require("$DocRoot/includes/menu.html");
-$TotalSql = "SELECT SUM(total_miles) as miles FROM drives WHERE user_uid=('$UserID_Cookie')";
-$TotalResultCount = $conn->query($TotalSql);
-$TotalMilesFetch = mysqli_fetch_array($TotalResultCount);
-$TotalMiles =  $TotalMilesFetch['miles'];
+
 $SetVehID = $_GET["uid"];
 $SQLError = $_GET['e'];
 $DeleteError = $_GET['de'];
+
+$TotalSql = $conn->prepare("SELECT SUM(total_miles) as miles FROM drives WHERE user_uid=?");
+$TotalSql->bind_param("s", $UserID_Cookie);
+$TotalSql->execute();
+$TotalMilesFetch = $TotalSql->get_result()->fetch_assoc();
+$TotalMiles =  $TotalMilesFetch['miles'];
 
 if (isset($_POST["submit_drive"])) {
   $milesDrive = $_POST['miles_enter'];
@@ -37,7 +40,7 @@ if (isset($_POST["submit_drive"])) {
     echo "Unable to insert your information." . $sql . "<br></b>" . $conn->error;
     echo "Please <a href='mailto:support@logandag.dev?subject=SQL Drive Logging Issue.'>Email Support Here</a></div>";
   } else {
-    header('refresh:0; url=drive.php');
+    header('refresh:0; url=/ui/drive');
   }
 }
 ?>

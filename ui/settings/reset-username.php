@@ -1,4 +1,7 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 /// This is the "Settings" page username reset feture.
 /// This will use the email from the session_start in order to change with the database
 /// The "Forgot Username" page will require the email in order to obtain, NOT reset, the username.
@@ -8,10 +11,8 @@ $vehtracRoot = dirname(__DIR__, 2);
 
 // 2. Include header and database using the calculated root
 require_once $vehtracRoot . "/includes/header.php";
+require_once $vehtracRoot . "/includes/cookieCheck.php";
 // 3. Start session safely
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 $user_email = $_SESSION["email"];
 
 

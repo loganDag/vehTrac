@@ -21,6 +21,7 @@ while($CValidResult = mysqli_fetch_array($CValidRQuery)){
    $cookie_valid_uid = $CValidResult["cookie_id"];
    $cookie_valid_num = $CValidResult["is_valid"];
 }
+
 if (!$cookie_valid_uid){
     header('refresh:0; url=/index.php?error=1');
 }

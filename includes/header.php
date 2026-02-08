@@ -1,6 +1,5 @@
 <?php
 session_start();
-$DocRoot = $_SERVER["DOCUMENT_ROOT"];
 require "$DocRoot/includes/dbconnect.php";
 require "$DocRoot/BackPhp/GetUserInfo.php";
 require "$DocRoot/BackPhp/driveInfo.php";

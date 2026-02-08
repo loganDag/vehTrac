@@ -3,6 +3,8 @@ session_start();
 $DocRoot = $_SERVER["DOCUMENT_ROOT"];
 require ("$DocRoot/includes/header.php");
 require ("$DocRoot/includes/menu.html");
+require "$DocRoot/includes/cookieCheck.php";
+
 
 // 1. Securely fetch session data
 $UserID_Cookie = $_SESSION["user_id"] ?? null;
