@@ -17,6 +17,7 @@ $UserID = $_SESSION["user_id"];
     </head>
 <body data-bs-theme="<?php echo $theme;?>">
     <div class="main_site_content">
+        <h2 class="jumbotron text-centered">Account Settings</h2>
     <form class="form-check form-switch" action="" method="post">
                             <input class="form-check-input" type="checkbox" name="themeMemorySync_Light" id="themeMemorySync_Light">
                               <label class="form-check-label" for="themeMemorySync_Light">Light theme.</label>
@@ -30,14 +31,15 @@ $UserID = $_SESSION["user_id"];
         <a name="sessions"></a>
         <div class="sessions">
            <p class="fs-4 text-muted">
-                <p>
+                <p class="w-75 mx-auto">
                     Current Sessions:
-                    <table class="table table-responsive table-hover caption-top table-striped-columns sessions_table">
+                    <table class="table  table-responsive table-hover caption-top table-striped-columns sessions_table">
                         <thead>
                             <tr>
                                 <th scope="col">Login Date:</th>
                                 <th scope="col">Login IP:</th>
                                 <th scope="col">Login Valid:</th>
+                                <th scope="col">Deauthroize Sessions:</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,14 +53,17 @@ $UserID = $_SESSION["user_id"];
         $LoggedInIp = $CookieInfo["login_ip"];
         $LoggedInDate = $CookieInfo["login_date"];
         $RawCookieStatus = $CookieInfo["is_valid"];
+        $db_cookie_id = $CookieInfo["cookie_id"];
         $FixedCookieStatus = "";
 
         if ($RawCookieStatus == "0"){
-        $FixedCookieStatus = "Not authorized";
+        $FixedCookieStatus = "Not authorized.";
         }elseif($RawCookieStatus == "1"){
-        $FixedCookieStatus = "Authorized cookie/session";
-        }else{
-        $FixedCookieStatus = "Error getting status";
+        $FixedCookieStatus = "Authorized session.";
+        }/*elseif($CookieID == $db_cookie_id){
+           // $FixedCookieStatus = "This current session";
+        }*/else{
+        $FixedCookieStatus = "Error getting status.";
         }
                            echo "<tr>";
                             echo "<td>";
@@ -69,6 +74,9 @@ $UserID = $_SESSION["user_id"];
                             echo "</td>";
                               echo "<td>";
                                 echo $FixedCookieStatus;
+                               echo "</td>";
+                               echo "<td>";
+                               echo "<a href='deauth.php?id=$db_cookie_id'>Deauthorize this session</a>";
                                echo "</td>";
                         echo "</tr>";
     }
