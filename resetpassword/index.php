@@ -1,27 +1,27 @@
 <?php
 $DocRoot = $_SERVER["DOCUMENT_ROOT"];
-include "$DocRoot/../bootstrap.html";
-include "../includes/header.php";
+//include "$DocRoot/../bootstrap.html";
+require "$DocRoot/includes/header.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 // Set the default timezone to ensure correct time calculations
 date_default_timezone_set('America/New_York');
 
 //Initialize variable
-if (!isset($text_input)) {
-    $text_input = '';
+if (!isset($email_input)) {
+    $email_input = '';
 }
 if (isset($_POST["reset_password"])) {
-    $text_input = $_POST["reset_email"];
-    $stmt = $conn->prepare("SELECT * FROM user_info WHERE email = :email");
-    $stmt->bindParam(':email', $text_input);
+    $email_input = $_POST["reset_email"];
+    $stmt = $conn->prepare("SELECT * FROM user_info WHERE email = ?");
+    $stmt->bind_param('s', $email_input);
     $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->get_result()->fetch_assoc();
 
     $db_email = $result["email"];
     $new_db_email = strtolower($db_email);
-    $new_text_input = strtolower($text_input);
-    if ($new_db_email == $new_text_input) {
+    $new_email_input = strtolower($email_input);
+    if ($new_db_email == $new_email_input) {
         //successful email match, now give reset auth code and set an expiration of 15 mins.
 
         // Get the current date and time
@@ -42,13 +42,10 @@ if (isset($_POST["reset_password"])) {
         $reset_pass_code = random_int(100000, 999999);
 
         $stmt = $conn->prepare(
-            "UPDATE user_info SET reset_pass_time_expire = :expireTime, reset_pass_code = :PassCode WHERE email = :email"
+            "UPDATE user_info SET reset_pass_time_expire = ?, reset_pass_code = ? WHERE email = ?"
         );
-        $result = $stmt->execute([
-            'expireTime' => $expireTime,
-            'PassCode' => $reset_pass_code,
-            'email' => $new_text_input,
-        ]);
+        $stmt->bind_param("sss", $expireTime, $reset_pass_code, $new_db_email);
+        $result = $stmt->execute();
 
         if ($result) {
             $Body = "
@@ -58,17 +55,17 @@ if (isset($_POST["reset_password"])) {
        Here is your reset code: $reset_pass_code
        You will have 15 mins, until $expireTime, to reset it, afterward you will need to request a new code.
        </h4>
-       <h3>Please go <a href='https://link?code=$reset_pass_code'>Here</a> to finish the reset process.</h3>
-       if the link doesn't work, copy and paste this in your browser: https://link?code=$reset_pass_code
+       <h3>Please go <a href='https://vehtrac.logandag.dev/resetpassword/step2.php?code=$reset_pass_code'>Here</a> to finish the reset process.</h3>
+       if the link doesn't work, copy and paste this in your browser: https://vehtrac.logandag.dev/step2.php?code=$reset_pass_code
        </body>
        </html>
                 ";
             $mail->setFrom(
-                'Email',
-                'From name'
+                'no-reply@logandag.dev',
+                'VehTrac No reply'
             );
-            $mail->addAddress($text_input);
-            $mail->Subject = "Subject";
+            $mail->addAddress($email_input);
+            $mail->Subject = "VehTrac Password reset Verification";
             $mail->Body = $Body;
             if (!$mail->send()) {
                 echo "<div class='d-flex align-items-center justify-content-center'>";
@@ -106,79 +103,20 @@ if (isset($_POST["reset_password"])) {
         <div class="jumbotron text-center">
             <h1>VehTrac Reset Password</h1>
         </div>
-        <div id="loading" style="display: none;">
-            <img src='includes/images/loading.gif' alt="Loading...">
-        </div>
-        <form action="" method="post" id="login_form">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" name='themeToggle' id="themeToggle" <?php if (
-                    $theme == "dark"
-                ) {
-                    echo "checked";
-                } ?>>
-                <label class="form-check-label" for="themeToggle">Dark/light Mode</label>
-            </div>
-            <h3 class="text-muted">Sign in here:</h3>
-            <div class='form-floating'>
+        <form action="" method="post">
+                                <div class="form-floating mb-3">
+                        <input type="email" class="form-control" 
+                               id="reset_email" name="reset_email" placeholder="name@example.com" required 
+                               value="">
+                        <label for="reset_email">Email address</label>
+                    </div>
 
-                <input type='email' class='form-control <?php if (
-                    $LoginError == "1"
-                ) {
-                    echo " is-invalid";
-                } ?>' <?php if ($LoginError == "1") {
-    echo "value='$email'";
-} ?> id='Log_email' name='Log_email' placeholder='' required>
-                <label for='Log_email'>Email:</label>
-                <?php if ($LoginError == "1") {
-                    echo " <div class='invalid-feedback'>Invalid email or password.</div>";
-                } ?>
-            </div>  
-            <br>
-            <div class='form-floating'>
-                <input type='password' class='form-control <?php if (
-                    $LoginError == "1"
-                ) {
-                    echo " is-invalid";
-                } ?>' id='Log_password' name='Log_pass' placeholder='Enter password' required>
-                <label for='Log_password'>Password:</label>
-                <?php if ($LoginError == "1") {
-                    echo " <div class='invalid-feedback'>Invalid email or password.</div>";
-                } ?>
-            </div>
-            <br>
-            <div class="text-center form-row">
-                <button type="submit" class="btn btn-primary" name="signin_button">Sign In</button>
-            </div>
+                    <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="reset_password">Reset Password</button>
         </form>
-        <div class="separator">Or</div>
-        <br>
 
-        <!-- Button trigger modal -->
-        <div class="form-row text-center">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign_up">
-                Sign up </button>
-            <a href="/resetpassword" class="btn btn-primary" role="button">Reset Password</a>
-
-        </div>
     </div>
 </div>
-    <?php require "../includes/footer.html"; ?>
-    </body>
-    <script>
-        // Function to toggle between dark and light themes
-        function toggleTheme() {
-            const body = document.body;
-            const newTheme = themeToggleSwitch.checked ? 'dark' : 'light';
+    <?php require "$DocRoot/includes/footer.html"; ?>
 
-            // Toggle the theme
-            body.setAttribute('data-bs-theme', newTheme);
-        }
-
-        // Get the theme toggle switch element
-        const themeToggleSwitch = document.getElementById('themeToggle');
-
-        // Add an event listener to the theme toggle switch
-        themeToggleSwitch.addEventListener('change', toggleTheme);
-
-    </script>
+</body>
 </html>
