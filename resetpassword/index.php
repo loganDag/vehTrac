@@ -1,6 +1,5 @@
 <?php
 $DocRoot = $_SERVER["DOCUMENT_ROOT"];
-//include "$DocRoot/../bootstrap.html";
 require "$DocRoot/includes/header.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -12,6 +11,8 @@ if (!isset($email_input)) {
     $email_input = '';
 }
 if (isset($_POST["reset_password"])) {
+
+
     $email_input = $_POST["reset_email"];
     $stmt = $conn->prepare("SELECT * FROM user_info WHERE email = ?");
     $stmt->bind_param('s', $email_input);
@@ -48,16 +49,20 @@ if (isset($_POST["reset_password"])) {
         $result = $stmt->execute();
 
         if ($result) {
+            $human_readable = $expirationTime->format('F j, Y \\a\\t g:i a'); 
             $Body = "
                        <!DOCTYPE html>
        <body>
-       <h2>
+       <h3>Password Reset Request:</h3>
+       <hr>
+       <br>
+       <p>
        Here is your reset code: $reset_pass_code
-       You will have 15 mins, until $expireTime, to reset it, afterward you will need to request a new code.
-       </h4>
-       <h3>Please go <a href='https://vehtrac.logandag.dev/resetpassword/step2.php?code=$reset_pass_code'>Here</a> to finish the reset process.</h3>
-       if the link doesn't work, copy and paste this in your browser: https://vehtrac.logandag.dev/step2.php?code=$reset_pass_code
-       </body>
+       You will have 15 mins, until: $human_readable, to reset it, afterward you will need to request a new code.
+       </p>
+       <p>Please go <a href='https://vehtrac.logandag.dev/resetpassword/step2.php?code=$reset_pass_code&email=$new_db_email'>Here</a> to finish the reset process.
+       if the link doesn't work, copy and paste this in your browser: <br> https://vehtrac.logandag.dev/resetpassword/step2.php?code=$reset_pass_code&email=$new_db_email</p>
+        </body>
        </html>
                 ";
             $mail->setFrom(
@@ -112,6 +117,7 @@ if (isset($_POST["reset_password"])) {
                     </div>
 
                     <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="reset_password">Reset Password</button>
+                     <a href="https://vehtrac.logandag.dev" class="btn btn-link btn-md text-decoration-none">Login</a>
         </form>
 
     </div>
