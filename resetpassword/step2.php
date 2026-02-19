@@ -4,7 +4,8 @@ require "$DocRoot/includes/header.php";
 date_default_timezone_set('America/New_York');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-$IP2 = $_SERVER["REMOTE_ADDR"];
+$CLIP = $_SERVER["REMOTE_ADDR"];
+$IP2 = $_SERVER['HTTP_CF_CONNECTING_IP'];
 $ErrorMessage = [];
 if (isset($_GET["email"])){
 $email = $_GET["email"];
@@ -20,11 +21,23 @@ $reset_code = $_GET["code"];
 if (isset($reset_code) && isset($email)){
 }
 if (isset($_POST["reset_password"])){
+    if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
+        $IP = $_SERVER['HTTP_CF_CONNECTING_IP'];
+    }else{
     $IP = $_SERVER["REMOTE_ADDR"];
+    }
+
+        $json = file_get_contents("");
+$json1 = json_decode($json, true);
+$country = $json1['country'];
+$region = $json1['region'];
+$city = $json1['city'];
+$coordinates = $json1['loc'];
+$postal = $json1['postal'];
+
     $new_password = $_POST["password_one"];
     $conf_password = $_POST["conf_password"];
     $entered_email = $_POST["reset_email"];
-
 
  if ($entered_email == $email){
 $stmt = $conn->prepare("SELECT email, reset_pass_code, reset_pass_time_expire FROM user_info WHERE email = ?");
@@ -63,6 +76,11 @@ $db_expire_time = $result["reset_pass_time_expire"];
        If this was you, there is no further action that needs to be taken and you can disregard this email. <br>
        If you did not make these changes, please either click <a href='https://vehtrac.logandag.dev/ui/security'>Here.</a> <br>
        Or, reset your passsword again and change your email and/or username information.
+       <br>
+       <hr>
+       Location details of device who reset your password: <br>
+       $city, $region, $country
+       <hr>
        <br>
        Best regards, <br>
        VehTrac Administration <br>
@@ -143,7 +161,8 @@ $conn->close();
                     </div>
 
                     <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="reset_password">Reset Password</button>
-                     <a href="/resetpassword" class="btn btn-link btn-md text-decoration-none">Click for new code.</a>
+                     <a href="/resetpassword" class="btn btn-link btn-md text-decoration-none">Click for new code</a> <br>
+                     <a href="https://vehtrac.logandag.dev" class="btn btn-link btn-md text-decoration-none">Login</a>
         </form>
 
     </div>
