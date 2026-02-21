@@ -15,8 +15,10 @@ if (isset($_SESSION["cookie_id"])){
 }else{
     header('refresh:0; url=/index.php?error=3');
 }
-$CookieValidQuery = "SELECT * FROM user_logins WHERE cookie_id=('$CookieID')";
-$CValidRQuery = $conn->query($CookieValidQuery);
+$CookieValidQuery = $conn->prepare("SELECT * FROM user_logins WHERE cookie_id= ?");
+$CookieValidQuery->bind_param("s", $CookieID);
+$CookieValidQuery->execute();
+$CValidRQuery = $CookieValidQuery->get_result();
 while($CValidResult = mysqli_fetch_array($CValidRQuery)){
    $cookie_valid_uid = $CValidResult["cookie_id"];
    $cookie_valid_num = $CValidResult["is_valid"];
