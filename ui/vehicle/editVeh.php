@@ -6,11 +6,6 @@ require("$DocRoot/includes/menu.html");
 $VehUIDUrl = $_GET["uid"];
 $Cookie_user_id = $_SESSION["cookie_id"];
 
-$VehSecureSQL = "SELECT * FROM user_vehicles WHERE veh_uid=('$VehUIDUrl')";
-$VehSecureResult = $conn->query($VehSecureSQL);
-while($VehSecureInfo = $VehSecureResult->fetch_assoc()){
-
-}
 
 $stmt = $conn->prepare("SELECT * FROM vehicles WHERE veh_uid= ?");
 $stmt->bind_param("s", $VehUIDUrl);
