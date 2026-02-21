@@ -2,33 +2,44 @@
 <?php
 $DocRoot = $_SERVER["DOCUMENT_ROOT"];
 require ("$DocRoot/includes/header.php");
-require ("$DocRoot/includes/cookieCheck.php");
 require ("$DocRoot/includes/menu.html");
 $SetDriveID = $_GET["uid"];
+$UserID_Cookie = $_SESSION["user_id"];
 
 if (!isset($SetDriveID)){
   header('refresh:0; url=/ui/drive/');
 }
 else{
-$sql = "SELECT * FROM drives WHERE ran_id = ('$SetDriveID')";
-$result = $conn->query("$sql");
-if ($result == TRUE){
+$sql = $conn->prepare("SELECT * FROM drives WHERE ran_id = ?");
+$sql->bind_param("i", $SetDriveID);
+$sql->execute();
+$result = $sql->get_result();
+if ($result->num_rows > 0){
 while($Info = $result->fetch_assoc()){
 $db_veh_uid = $Info["veh_uid"];
 $db_miles = $Info["total_miles"];
 $db_reason = $Info["reason"];
 $db_date_time = $Info["date_time"];
 $drive_db_id = $Info["ran_id"];
+$drive_owner_id = $Info["user_uid"];
 }
 $dateTime = new DateTime($db_date_time);
 $formatted_datetime = $dateTime->format('Y-m-d\TH:i');
 }
-else if ($result == FALSE){
+else{
   echo "<div class='align-items-center justify-content-center'>";
   echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Editing Issue</h3>";
   echo "Unable to grab your information." .$sql."<br></b>" . $conn->error;
   echo "Please <a href='mailto:contact@logandag.dev?subject=SQL Drive Editting Issue.'>Email Support Here</a></div>";
 }//END DB SELECTION IF STATEMENT
+
+if ($UserID_Cookie != $drive_owner_id){
+ echo "<div class='align-items-center justify-content-center'>";
+   echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Editing Issue</h3>";
+   echo "You seem to not be the owner of this drive, please try again, will redirect now. </div>";
+   header('refresh:4; url=/ui/drive');
+die();
+  }
 
 if (isset($_POST['save_drive'])){
 $miles_update = $_POST['miles_update'];
@@ -36,12 +47,15 @@ $veh_uid_update = $_POST['veh_uid_update'];
 $reason_update = $_POST['reason_update'];
 $time_update = date("M-d-Y H:i:s", strtotime ($_POST["time_update"]));
 
-$sql = "UPDATE drives SET total_miles=('$miles_update'), reason=('$reason_update'), date_time=('$time_update'), veh_uid = ('$veh_uid_update') WHERE ran_id=('$drive_db_id')";
-$Update = $conn->query($sql);
+$sql =$conn->prepare("UPDATE drives SET total_miles= ?, reason=?, date_time=?, veh_uid = ? WHERE ran_id=?");
+$sql->bind_param(
+"ssssi", $miles_update, $reason_update, $time_update, $veh_uid_update, $drive_db_id
+);
+$Update = $sql->execute();
 if ($Update == TRUE){
   header('refresh:0; url=/ui/drive/index.php?s=1');
-}else if ($Update == FALSE){
-  $connError = $sql . $conn->error;
+}elseif ($Update == FALSE){
+  $connError = $sql->error . $sql->errno;
   header('refresh:0; url=/ui/drive/index.php?e='.$connError);
 }
 
