@@ -106,7 +106,7 @@ $UserID_Cookie
 
                   echo "<tr><td>$dis_drive_dis Miles</td>";
                   echo " <td>$dis_drive_reason</td>";
-                  echo "<td><a href='vehicles.php?uid=" . htmlspecialchars($dis_drive_uid) . "'>$dis_drive_uid</a></td>";
+                  echo "<td><a href='/ui/vehicle/editVeh.php?uid=" . htmlspecialchars($dis_drive_uid) . "'>$dis_drive_uid</a></td>";
                   echo "<td>$dis_drive_date</td>";
                  // echo "<td><button type='button' class='btn btn-secondary' onclick='myFunction($drive_db_id)'>Edit Drive ID: $drive_db_id</button> </td>";
                  echo "<td><a href='https://vehtrac.logandag.dev/ui/drive/editDrive.php?uid=$drive_db_id'>Edit $drive_db_id</a></td>";
