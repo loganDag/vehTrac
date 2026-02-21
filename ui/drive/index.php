@@ -20,8 +20,10 @@ if (isset($_POST["submit_drive"])) {
 
 
   $ran_id = rand(1, 100000);
-  $sql = "SELECT * FROM drives WHERE ran_id=('$ran_id')";
-  $result = $conn->query($sql);
+  $stmt = $conn->prepare("SELECT * FROM drives WHERE ran_id= ?");
+  $stmt->bind_param("i", $ran_id);
+$stmt->execute();
+  $result = $stmt->get_result();
   while ($ResultsQuery = mysqli_fetch_array($result)) {
     $ran_id_result = $ResultsQuery["ran_id"];
   }
@@ -33,8 +35,19 @@ if (isset($_POST["submit_drive"])) {
   $DriveVehUID = $_POST["veh_uid_enter"];
   $DriveTime = date("M-d-Y H:i:s", strtotime($_POST["drive_time"]));
 
-  $sql = "INSERT INTO drives (ran_id, total_miles, reason, date_time, veh_uid, user_uid) VALUES ('".$ran_id."', '" . $milesDrive . "', '" . $DriveReason . "', '" . $DriveTime . "', '" . $DriveVehUID . "', '" . $UserID_Cookie . "')";
-  if ($conn->query($sql) == false) {
+  $sql = $conn->prepare("INSERT INTO drives (ran_id, total_miles, reason, date_time, veh_uid, user_uid) VALUES (?, ?, ?, ?, ?, ?)");
+  $sql->bind_param(
+"isssss",
+$ran_id,
+$milesDrive,
+$DriveReason,
+$DriveTime,
+$DriveVehUID,
+$UserID_Cookie
+  );
+  
+  
+  if ($sql->execute() == false) {
     echo "<div class='align-items-center justify-content-center'>";
     echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Logging issue</h3>";
     echo "Unable to insert your information." . $sql . "<br></b>" . $conn->error;
