@@ -2,9 +2,8 @@
 session_start();
 $DocRoot = $_SERVER["DOCUMENT_ROOT"];
 require ("$DocRoot/includes/header.php");
-require ("$DocRoot/includes/menu.html");
 require "$DocRoot/includes/cookieCheck.php";
-
+require ("$DocRoot/includes/menu.html");
 
 // 1. Securely fetch session data
 $UserID_Cookie = $_SESSION["user_id"] ?? null;
@@ -105,7 +104,7 @@ if (isset($_POST['add_vehicle'])) {
 <html lang="en">
 <head>
         
-    <title>VehTrac | <?php echo $user_display_name;?>'s Dashboard</title>
+    <title>VehTrac | <?php echo $user_first_name;?>'s Dashboard</title>
 
 </head>
 <body data-bs-theme="<?php echo $theme;?>">

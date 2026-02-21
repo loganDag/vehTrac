@@ -8,7 +8,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="close"></button>
         </div>
     <div class="offcanvas-body">
-        <p class="text-muted">Welcome, <?php echo $user_display_name;?></p>
+        <p class="text-muted">Welcome, <?php echo $user_first_name;?></p>
         <p class="text-muted">You have <?php echo $DriveCount;?> Drive(s) entered</p>
         <p class="text-muted">You have <?php echo $CarNumber;?> Car(s) entered</p>
                 <ul class="nav flex-column">
