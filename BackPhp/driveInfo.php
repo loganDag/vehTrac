@@ -4,4 +4,5 @@ $DriveInfoQuery->bind_param("s", $UserID_Cookie);
 $DriveInfoQuery->execute();
 $DriveInfoQuery->bind_result($DriveCount);
 $DriveInfoQuery->fetch();
+$DriveInfoQuery->close();
 ?>
