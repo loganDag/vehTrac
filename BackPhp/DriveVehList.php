@@ -11,14 +11,19 @@
                         </thead>
                             <tbody>
                      <?php                
-                        $CarIDGrabInfoSql = "SELECT veh_uid FROM user_vehicles WHERE user_uid=('$UserID_Cookie')";
-                        $CarIDGrabResult = $conn->query($CarIDGrabInfoSql);
+                        $CarIDGrabInfoSql = $conn->prepare("SELECT veh_uid FROM user_vehicles WHERE user_uid=?");
+                       $CarIDGrabInfoSql->bind_param("i", $UserID_Cookie);
+                        $CarIDGrabInfoSql->execute();
+                        $CarIDGrabResult = $CarIDGrabInfoSql->get_result();
                         if ($CarIDGrabResult->num_rows > 0){
                         while($CarIDGrabInfo = $CarIDGrabResult->fetch_assoc()){
                            $veh_id = $CarIDGrabInfo["veh_uid"];
                         
-                        $CarInfoGSql = "SELECT * FROM vehicles WHERE veh_uid=('$veh_id')";
-                        $CarGrabInfoGResult= $conn->query($CarInfoGSql);
+                        $CarInfoGSql = $conn->prepare("SELECT * FROM vehicles WHERE veh_uid=?");
+                        $CarInfoGSql->bind_param("i",$veh_id);
+                        $CarInfoGSql->execute();
+                        $CarGrabInfoGResult = $CarInfoGSql->get_result();
+                        if ($CarGrabInfoGResult->num_rows > 0){
                                 while($CarIDGrabInfoDis = $CarGrabInfoGResult->fetch_assoc()){
                         $dis_veh_make = $CarIDGrabInfoDis["make"];
                         $dis_veh_model = $CarIDGrabInfoDis["model"];
@@ -30,6 +35,7 @@
                         echo " <td>$dis_veh_year</td>";
                         echo "<td>$veh_id</td>";
                         echo "</tr>";
+                                }
                     } 
                       
                 

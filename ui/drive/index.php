@@ -92,8 +92,10 @@ $UserID_Cookie
             </thead>
             <tbody>
               <?php
-              $DriveSql = "SELECT * FROM drives WHERE user_uid=('$UserID_Cookie')";
-              $DriveResult = $conn->query($DriveSql);
+              $DriveSql = $conn->prepare("SELECT * FROM drives WHERE user_uid=?");
+              $DriveSql->bind_param("s", $UserID_Cookie);
+              $DriveSql->execute();
+              $DriveResult = $DriveSql->get_result();
               if ($DriveResult->num_rows > 0) {
                 while ($DriveInfo = $DriveResult->fetch_assoc()) {
 
