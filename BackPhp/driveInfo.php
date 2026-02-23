@@ -1,6 +1,7 @@
 <?php
-$DriveInfoQuery = "SELECT * FROM drives WHERE user_uid=('$UserID_Cookie')";
-if ($DriveInfoQueryResult = mysqli_query($conn, $DriveInfoQuery)){
-    $DriveCount = mysqli_num_rows($DriveInfoQueryResult);
-}
+$DriveInfoQuery = $conn->prepare("SELECT COUNT(*) FROM drives WHERE user_uid=?");
+$DriveInfoQuery->bind_param("s", $UserID_Cookie);
+$DriveInfoQuery->execute();
+$DriveInfoQuery->bind_result($DriveCount);
+$DriveInfoQuery->fetch();
 ?>
