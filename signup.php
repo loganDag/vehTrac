@@ -66,7 +66,7 @@ if (isset($_POST["submit_register"])) {
        <!DOCTYPE html>
        <body>
        <h4>
-       Thank you for choosing VehTrac! $sub_email
+       Thank you for choosing VehTrac, $sub_email!
        We hope you enjoy your adventures with VehTrac and what it can do!
        </h4>
        <p>Your Unique ID is: $user_set_uid</p><br>
@@ -83,7 +83,7 @@ if (isset($_POST["submit_register"])) {
                 if (!$mail->send()) {
                     echo "<div class='d-flex align-items-center justify-content-center'>";
                     echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Sign up issue</h3>";
-                    echo "Email not sent.<br>" . $mail->ErrorInfo . "<br></b>";
+                    echo "Email not sent. Please contact support for the issue, Error code: EmIN1. <br></b>";
                     echo "Please <a href='mailto:contact@logandag.dev?subject=VehTrac signup email not sending.'>Email Support Here</a>";
                     echo "Your account is still made but the welcome email couldn't be sent, please send support an email to resolve this</div>";
                 } else {
