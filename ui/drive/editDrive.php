@@ -70,18 +70,14 @@ if (isset($_POST['drive_back'])){
 <html lang="en">
 <head>
         
-    <title>VehTrac | Edit Drive <?php echo $SetDriveID;?> </title>
+    <title>
+      VehTrac | Edit Drive <?php echo $SetDriveID;?> 
+  </title>
 </head>
 <body data-bs-theme="<?php echo $theme;?>">
-<div class="modal fade" id="editDrive" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="AddDrive" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-fullscreen">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Editing drive <?php echo $SetDriveID;?></h5>
-        <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-      </div>
-      <div class="modal-body">
-      <form action="" method="post">
+  <div class="container min-vh-100 d-flex flex-column justify-content-center align-items-center">
+    <p class=" fs-5 alert alert-info w-auto">Only update what you want to change, leave the other values as they are or they will be blank in the database!</p>
+<form action="" method="post">
             <div class="row">
               <div class="col-md-6">
             <div class='form-floating'>
@@ -124,27 +120,13 @@ if (isset($_POST['drive_back'])){
                       </div>
                   </div>
                 </div>
-          </div> <!--End modal body-->
-        <div class="modal-footer">
-          <p class=" fs-5 alert alert-danger">Only update what you want to change, leave the other values as they are or they will be blank in the database!</p>
+                <br><br>
           <button type="submit" class="btn btn-primary" name="save_drive">Save Drive</button>
+          <br>
+          <br>
           <button type="submit" class="btn btn-secondary" name="drive_back">Go back to drives</button>
       </form>
-      <!--<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
-      </div>
-    </div>
-  </div>
-  </div><!--END Modal-->
-
+</div>
+<?php require ("$DocRoot/includes/footer.html");?>
 </body>
-  <?php
-  if (isset($SetDriveID)){
-    echo "<script type='text/javascript'>
-    var DriveModal = new bootstrap.Modal(document.getElementById('editDrive'), {
-  keyboard: false
-  });
-  DriveModal.show();
-    </script>";
-  }
-  ?>
   </html>
