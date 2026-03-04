@@ -10,6 +10,8 @@ include "includes/header.php";
 $LoginError = ""; // Initialize variable
 
 if (isset($_POST["signin_button"])) {
+    $CLIP = $_SERVER["REMOTE_ADDR"];
+
     $email = $_POST["Log_email"];
     $password = $_POST["Log_pass"];
 
@@ -50,13 +52,17 @@ if (isset($_POST["signin_button"])) {
         }
         $check_query->close(); // Close it after the loop finishes
 
-        // Insert login record
-        $login_ip = $_SERVER["REMOTE_ADDR"];
+    if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
+        $DIRECTIP = $_SERVER['HTTP_CF_CONNECTING_IP'];
+    }else{
+        $DIRECTIP = $_SERVER["REMOTE_ADDR"];
+    }
+    
         $date = date('Y-m-d H:i:s');
         $valid = "1";
 
         $stmt_insert = $conn->prepare("INSERT INTO user_logins (cookie_id, user_uid, login_ip, login_date, is_valid) VALUES (?, ?, ?, ?, ?)");
-        $stmt_insert->bind_param("issss", $cookie_set_id, $db_idnum, $login_ip, $date, $valid);
+        $stmt_insert->bind_param("issss", $cookie_set_id, $db_idnum, $DIRECTIP, $date, $valid);
 
         if ($stmt_insert->execute()) {
             $_SESSION["user_id"] = $db_idnum;
