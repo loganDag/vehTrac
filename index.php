@@ -52,12 +52,13 @@ if (isset($_POST["signin_button"])) {
         }
         $check_query->close(); // Close it after the loop finishes
 
-    if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
+        // Insert login record
+        
+        if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
         $DIRECTIP = $_SERVER['HTTP_CF_CONNECTING_IP'];
     }else{
         $DIRECTIP = $_SERVER["REMOTE_ADDR"];
     }
-    
         $date = date('Y-m-d H:i:s');
         $valid = "1";
 
@@ -81,8 +82,6 @@ if (isset($_POST["signin_button"])) {
     }
     $stmt->close();
 }
-
-require ("signup.php");
 $conn->close();
 
 // Capture security errors from GET
@@ -95,13 +94,6 @@ $Cookie_security = $_GET["error"] ?? null;
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VehTrac | Home</title>
-    <style>
-        body { font-family: 'Roboto', sans-serif; transition: background 0.3s ease; }
-        .separator { display: flex; align-items: center; text-align: center; color: #6c757d; }
-        .separator::before, .separator::after { content: ''; flex: 1; border-bottom: 1px solid #dee2e6; }
-        .separator:not(:empty)::before { margin-right: .5em; }
-        .separator:not(:empty)::after { margin-left: .5em; }
-    </style>
 </head>
 
 <body data-bs-theme="<?php echo $_COOKIE['SiteTheme'] ?? 'light'; ?>">
@@ -117,7 +109,7 @@ $Cookie_security = $_GET["error"] ?? null;
 
     <?php if (isset($login_success)): ?>
         <div class="text-center py-5">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status" data-bs-theme="<?php echo $_COOKIE['SiteTheme'] ?? 'light'; ?>"></div>
             <h4 class="mt-3">Signing you in...</h4>
         </div>
     <?php else: ?>
@@ -132,7 +124,7 @@ $Cookie_security = $_GET["error"] ?? null;
             <div class="card-body p-4 p-sm-5">
                 <form action="" method="post">
                     
-                    <div class="d-flex justify-content-between mb-4 bg-light p-2 rounded">
+                    <div class="d-flex justify-content-between mb-4 p-2 rounded">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" name='themeToggle' id="themeToggle" <?php echo (($_COOKIE['SiteTheme'] ?? '') == "dark") ? "checked" : ""; ?>>
                             <label class="form-check-label small" for="themeToggle">Dark Mode</label>
@@ -176,6 +168,41 @@ $Cookie_security = $_GET["error"] ?? null;
     <?php endif; ?>
 </div>
 
+<?php require "signup.php"; ?>
+<div class="modal fade" id="sign_up" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create your account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" method="post">
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" name="signup_email" placeholder="..." required>
+                            <label>Email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" name="signup_pass" placeholder="..." required>
+                            <label>Password</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" name="signup_confpass" placeholder="..." required>
+                            <label>Confirm Password</label>
+                        </div>
+                        </div>
+
+                       <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" name="submit_register" class="btn btn-primary">Sign Up</button>
+                        </div>
+                        </form>
+            </div>
+        </div>
+</div>
+<?php require "includes/footer.html"; ?>
+</body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.getElementById('themeToggle').addEventListener('change', function() {
@@ -183,7 +210,11 @@ $Cookie_security = $_GET["error"] ?? null;
         document.body.setAttribute('data-bs-theme', theme);
     });
 </script>
-
-<?php require "includes/footer.html"; ?>
-</body>
+    <style>
+        body { font-family: 'Roboto', sans-serif; transition: background 0.3s ease; }
+        .separator { display: flex; align-items: center; text-align: center; color: #6c757d; }
+        .separator::before, .separator::after { content: ''; flex: 1; border-bottom: 1px solid #dee2e6; }
+        .separator:not(:empty)::before { margin-right: .5em; }
+        .separator:not(:empty)::after { margin-left: .5em; }
+    </style>
 </html>

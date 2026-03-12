@@ -33,7 +33,7 @@ if (isset($_POST["submit_register"])) {
                 $result = $stmt->get_result();
                 $ResultsQuery = $result->fetch_assoc();
             }
-
+            $encrypted_pass = password_hash($sub_pass, PASSWORD_BCRYPT);
             $reg_date = date('Y-m-d H:i:s');
             $site_rank = "0";
             $sub_tier = "1";
@@ -45,7 +45,7 @@ if (isset($_POST["submit_register"])) {
                 "issssss",
                 $user_set_uid,
                 $sub_email,
-                $sub_pass,
+                $encrypted_pass,
                 $site_rank,
                 $sub_tier,
                 $reg_date,
