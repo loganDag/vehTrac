@@ -17,16 +17,28 @@ $UserID = $_SESSION["user_id"];
     </head>
 <body data-bs-theme="<?php echo $theme;?>">
     <div class="main_site_content">
-        <h2 class="jumbotron text-centered">Account Settings</h2>
-    <form class="form-check form-switch" action="" method="post">
-                            <input class="form-check-input" type="checkbox" name="themeMemorySync_Light" id="themeMemorySync_Light">
-                              <label class="form-check-label" for="themeMemorySync_Light">Light theme.</label>
-                              <br>
-                            <input class="form-check-input" type="checkbox" name="themeMemorySync_Dark" id="themeMemorySync_Dark">
-                              <label class="form-check-label" for="themeMemorySync_Dark">Dark theme.</label>
-                              <p class="text-muted">Syncs across devices and you can change theme in settings</p>
-                              <button type="submit" class="btn btn-primary" name="theme_submit">Save theme choice</button>
-        </form>
+        <div class="text-center">
+        <h2 class="jumbotron">Account Settings:</h2>
+        </div>
+<div class="theme-switch d-flex flex-column align-items-center text-center">
+    <p class="fs-5">Display Theme:</p>
+    <span class="fs-6 text-muted">Choose a theme to sync across your account for devices.</span>
+
+    <form class="d-flex flex-column align-items-center mt-3" action="" method="post">
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="themeMemorySync_Light" name="themeMemorySync_Light">
+            <label class="form-check-label" for="themeMemorySync_Light">Light theme.</label>
+        </div>
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="themeMemorySync_Dark" name="themeMemorySync_Dark">
+            <label class="form-check-label" for="themeMemorySync_Dark">Dark theme.</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" name="theme_submit">Save theme choice</button>
+    </form>
+</div>
 
         <a name="sessions"></a>
         <div class="sessions">

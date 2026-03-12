@@ -3,8 +3,6 @@ $DocRoot = $_SERVER["DOCUMENT_ROOT"];
 require("$DocRoot/includes/header.php");
 require("$DocRoot/includes/cookieCheck.php");
 require("$DocRoot/includes/menu.html");
-$UserCookie = $_SESSION["user_id"];
-
 
 ?>
 <html>
@@ -12,8 +10,8 @@ $UserCookie = $_SESSION["user_id"];
         <title>VehTrac | Fuel Log</title>
     </head>
     <body data-bs-theme="<?php echo $theme;?>">
-    <div class="main_site_content container min-vh-100 d-flex flex-column">
-
+    <div class="main_site_content min-vh-100">
+<div class="d-flex flex-column container">
 <div class="container-fluid d-flex mx-auto">
                  <table class="table table-responsive table-hover caption-top table-striped-columns fuel_table">
                     <caption>List of all your fuel logs in the system:</caption>
@@ -79,7 +77,7 @@ $UserCookie = $_SESSION["user_id"];
                 </tbody>
             </table>
      </div>
-
+</div>
 
 
 
