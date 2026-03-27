@@ -8,8 +8,7 @@
                             <th scope="col">Model</th>
                             <th scope="col">Year</th>
                             <th scope="col">Vehicle ID</th>
-                            <th scope="col">Enter miles</th>
-                            <th scope="col">Edit Vehicle</th>
+                            <th scope="col">Vehicle Options</th>
                                 </tr>
                         </thead>
                             <tbody>
@@ -50,8 +49,17 @@ if ($stmt = $conn->prepare($CarInfoGSql)) {
                         echo " <td>$dis_veh_model</td>";
                         echo " <td>$dis_veh_year</td>";
                         echo "<td>$dis_veh_uid</td>";
-                        echo "<td><a href='/ui/drive/index.php?uid=".htmlspecialchars($dis_veh_uid)."'>Add Drive</a></td>";
-                        echo "<td><a href='/ui/vehicle/editVeh.php?uid=".htmlspecialchars($dis_veh_uid)."'>Edit Vehicle</a></td>";
+                        echo "<td> 
+                        <div class='dropdown'>
+                                  <button class='btn btn-secondary dropdown-toggle' type='button' id='dropdownMenuButton1' data-bs-toggle='dropdown' aria-expanded='false'>
+                                Actions
+                                 </button>
+                                <ul class='dropdown-menu' aria-lebelledby='dropdownMenuButton1'>
+                                <li><a href='/ui/drive/index.php?uid=".htmlspecialchars($dis_veh_uid)."'>Add Drive</a></li>
+                                <li><a href='/ui/vehicle/editVeh.php?uid=".htmlspecialchars($dis_veh_uid)."'>Edit Vehicle</a></li>
+                                </ul>
+                        </div>
+                        </td>";
                         echo "</tr>";
                     } 
                       
