@@ -72,8 +72,7 @@ if ($sql->execute()==false){
                             <th scope="col">Vehicle UID </th>
                             <th scope="col">Vehicle Nickname</th>
                             <th scope="col">Reason</th>
-                            <th scope="col">Edit Log</th>
-                            <th scope="col">Delete Log</th>
+                            <th scope="col">Additional Actions</th>
                                 </tr>
                         </thead>
                             <tbody>
@@ -123,8 +122,17 @@ if ($sql->execute()==false){
                                      echo "<td> $veh_id </td>";
                                      echo "<td>$veh_nickname_clean</td>";
                                      echo " <td>$dis_reason</td>";
-                                     echo "<td><a href='https://vehtrac.logandag.dev/ui/fuel/editFuel.php?dbid=$dis_db_id&action=edit'>Edit drive: $dis_db_id</a></td>";
-                                     echo "<td><a href='https://vehtrac.logandag.dev/ui/fuel/editFuel.php?dbid=$dis_db_id&action=delete'>Delete drive: $dis_db_id</a></td>";
+                                        echo "<td> 
+                        <div class='dropdown'>
+                                  <button class='btn btn-secondary dropdown-toggle' type='button' id='dropdownMenuButton1' data-bs-toggle='dropdown' aria-expanded='false'>
+                                Actions
+                                 </button>
+                                <ul class='dropdown-menu' aria-lebelledby='dropdownMenuButton1'>
+                                <li><a href='/ui/fuel/editFuel.php?dbid=".htmlspecialchars($dis_db_id)."&action=edit'>Edit Fuel Log</a></li>
+                                <li><a href='/ui/fuel/editFuel.php?dbid=".htmlspecialchars($dis_db_id)."&action=delete'>Delete Fuel Log</a></li>
+                                </ul>
+                        </div>
+                        </td>";
                                      echo "</tr>";
                                  }
                              }

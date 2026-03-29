@@ -1,5 +1,6 @@
 <?php
 session_start();
+//$DocRoot = $_SERVER["DOCUMENT_ROOT"];
 require "$DocRoot/includes/dbconnect.php";
 require "$DocRoot/BackPhp/GetUserInfo.php";
 require "$DocRoot/BackPhp/driveInfo.php";
@@ -7,6 +8,7 @@ require "$DocRoot/phpmailer/phpmailer/src/Exception.php";
 require "$DocRoot/phpmailer/phpmailer/src/PHPMailer.php";
 require "$DocRoot/phpmailer/phpmailer/src/SMTP.php";
 require "$DocRoot/phpmailer/phpmailer/src/settings.php";
+date_default_timezone_set('America/New_York');
 $theme = $_COOKIE["SiteTheme"];
 ?>
 
