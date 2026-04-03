@@ -17,7 +17,7 @@ display: block;
 </style>";
 }
 
-if ($intent == "edit"){
+elseif ($intent == "edit"){
     echo "<style>
     .delete_site_content{
     display: none;
@@ -28,7 +28,19 @@ display: block;
 ;
 </style>";
 }
+else{
+       echo "<style>
+    .delete_site_content{
+    display: none;
+}
 
+        .edit_site_content{
+    display: none;
+}
+    </style>
+";
+    echo "Please check intent again, this function doesn't work.";
+}
 ?>
 <!DOCTYPE html>
 <html>

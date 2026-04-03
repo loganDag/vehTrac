@@ -6,7 +6,6 @@ require("$DocRoot/includes/menu.html");
 $VehUIDUrl = $_GET["uid"];
 $Cookie_user_id = $_SESSION["cookie_id"];
 
-
 $stmt = $conn->prepare("SELECT * FROM vehicles WHERE veh_uid= ?");
 $stmt->bind_param("s", $VehUIDUrl);
 $stmt->execute();
@@ -23,7 +22,7 @@ while($VehInfo = $VehResult->fetch_assoc()){
     <title>VehTrac | Edit your vehicle info</title>
         </head>
         <body data-bs-theme="<?php echo $theme;?>">
-<h3 class="text-muted">Editing Vehicle <?php echo $VehLongInfo;?></h3>
+<h3 class="text-muted">Editing Vehicle: <?php echo $VehLongInfo;?></h3>
 <div class="main_site_content">
 
 

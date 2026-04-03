@@ -3,7 +3,6 @@ $DocRoot = $_SERVER["DOCUMENT_ROOT"];
 require "$DocRoot/includes/header.php";
 require "$DocRoot/includes/cookieCheck.php";
 require "$DocRoot/includes/menu.html";
-
 $CleanIP = '';
 $fuel_vehuid = '';
 $fuel_enter = '';
@@ -11,6 +10,14 @@ $price_enter = '';
 $mileage_enter = '';
 $fuel_reason = '';
 $fuel_time = '';
+$VehUID = $_GET["uid"];
+
+if (isset($VehUID)){
+$SetUID = $VehUID;
+}
+else{
+  $SetUID = NULL;
+}
 
 if (isset($_POST['submit_fuel'])){
           $GetcurrentTime = new DateTime();
@@ -146,6 +153,7 @@ if ($sql->execute()==false){
 </div>
 
 <hr>
+<a name="addFuel">
 <div class="d-flex flex-column container">
   <p class="fs-3">Log your fuel below:</p>
 <div class="container-fluid d-flex mx-auto">
@@ -153,7 +161,7 @@ if ($sql->execute()==false){
           <form action="" method="post" class='w-100'>
             <p class='text-muted alert alert-warning'>Fields with * are required</p>
                         <div class='form-floating'>
-              <input type='text' class='form-control' id='fuel_vehuid' name='fuel_vehuid' placeholder='' required>
+              <input type='text' class='form-control' id='fuel_vehuid' name='fuel_vehuid' placeholder = '' value = '<?php echo "$SetUID";?>' required>
               <label for='fuel_vehuid'>Vehicle ID: *</label>
             </div>
             <br>
@@ -189,6 +197,7 @@ if ($sql->execute()==false){
           </form>
 
 </div>
+   </a>
 </div>
 </div>
 </body>
