@@ -25,7 +25,7 @@ if (isset($VehUIDUrl)){
                             <th scope="col">Model</th>
                             <th scope="col">Year</th>
                             <th scope="col">Database ID (UID)</th>
-                            <th scope="col">Edit Vehicle</th>
+                            <th scope="col">Additional Options</th>
                             <!--<th scope="col">Additional</th>-->
                                 </tr>
                         </thead>
@@ -53,8 +53,18 @@ if (isset($VehUIDUrl)){
                         echo " <td>$dis_veh_model</td>";
                         echo " <td>$dis_veh_year</td>";
                         echo "<td>$dis_db_id</td>";
-                        echo "<td><a href='editVeh.php?uid=".htmlspecialchars($veh_id)."'>Edit Vehicle</a></td></tr>";
-                        
+                        echo "<td> 
+                        <div class='dropdown'>
+                                  <button class='btn btn-secondary dropdown-toggle' type='button' id='dropdownMenuButton1' data-bs-toggle='dropdown' aria-expanded='false'>
+                                Actions
+                                 </button>
+                                <ul class='dropdown-menu' aria-lebelledby='dropdownMenuButton1'>
+                                <li><a href='/ui/drive/index.php?uid=".htmlspecialchars($veh_id)."'>Add Drive</a></li>
+                                <li><a href='/ui/vehicle/editVeh.php?uid=".htmlspecialchars($veh_id)."'>Edit Vehicle</a></li>
+                                </ul>
+                        </div>
+                        </td>";
+                        echo "</tr>";
                     } 
               }
         }
