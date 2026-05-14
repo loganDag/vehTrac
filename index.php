@@ -6,6 +6,7 @@ use PHPMailer\PHPMailer\SMTP;
 
 $DocRoot = $_SERVER["DOCUMENT_ROOT"];
 include "includes/header.php";
+require "signup.php"; 
 
 $LoginError = ""; // Initialize variable
 
@@ -25,12 +26,6 @@ if (isset($_POST["signin_button"])) {
     if ($LoginDBInfo && password_verify($password, $LoginDBInfo["password"])) {
         $db_email = $LoginDBInfo["email"];
         $db_idnum = $LoginDBInfo["user_uid"];
-
-        // Handle Theme Selection
-        if (isset($_POST["themeMemoryCookie"])) {
-            $themeVal = isset($_POST["themeToggle"]) ? "dark" : "light";
-            setcookie("SiteTheme", $themeVal, time() + (86400 * 10), "/");
-        }
 
         // --- FIX FOR "OUT OF SYNC" ERROR ---
         $is_unique = false;
@@ -69,10 +64,8 @@ if (isset($_POST["signin_button"])) {
             $_SESSION["user_id"] = $db_idnum;
             $_SESSION["email"] = $db_email;
             $_SESSION["cookie_id"] = $cookie_set_id;
-            
             // Set success flag to trigger the UI spinner
             $login_success = true;
-            header('refresh:2; url=ui/dash');
         } else {
             die("Database Error: " . $conn->error);
         }
@@ -82,8 +75,6 @@ if (isset($_POST["signin_button"])) {
     }
     $stmt->close();
 }
-$conn->close();
-
 // Capture security errors from GET
 $Cookie_security = $_GET["error"] ?? null;
 ?>
@@ -107,9 +98,21 @@ $Cookie_security = $_GET["error"] ?? null;
         </div>
     <?php endif; ?>
 
-    <?php if (isset($login_success)): ?>
+    <?php if (isset($login_success)): 
+        $stmt = $conn->prepare('SELECT theme FROM user_info WHERE email = ?');
+        $stmt->bind_param('s', $db_email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $themeVal = $row['theme'];
+        } 
+        $result->free();
+        $stmt->close();
+       setcookie("SiteTheme", $themeVal, time() + (86400 * 10), "/");
+                header('refresh:2; url=ui/dash');
+        ?>
         <div class="text-center py-5">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status" data-bs-theme="<?php echo $_COOKIE['SiteTheme'] ?? 'light'; ?>"></div>
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
             <h4 class="mt-3">Signing you in...</h4>
         </div>
     <?php else: ?>
@@ -123,17 +126,6 @@ $Cookie_security = $_GET["error"] ?? null;
         <div class="card shadow-lg border-0">
             <div class="card-body p-4 p-sm-5">
                 <form action="" method="post">
-                    
-                    <div class="d-flex justify-content-between mb-4 p-2 rounded">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name='themeToggle' id="themeToggle" <?php echo (($_COOKIE['SiteTheme'] ?? '') == "dark") ? "checked" : ""; ?>>
-                            <label class="form-check-label small" for="themeToggle">Dark Mode</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="themeMemoryCookie" id="themeMemoryCookie" checked>
-                            <label class="form-check-label small" for="themeMemoryCookie">Save Choice</label>
-                        </div>
-                    </div>
 
                     <h4 class="mb-3 fw-bold">Sign in</h4>
 
@@ -168,7 +160,6 @@ $Cookie_security = $_GET["error"] ?? null;
     <?php endif; ?>
 </div>
 
-<?php require "signup.php"; ?>
 <div class="modal fade" id="sign_up" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -200,16 +191,12 @@ $Cookie_security = $_GET["error"] ?? null;
             </div>
         </div>
 </div>
-<?php require "includes/footer.html"; ?>
+<?php
+$conn->close();
+ require "includes/footer.html"; ?>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.getElementById('themeToggle').addEventListener('change', function() {
-        const theme = this.checked ? 'dark' : 'light';
-        document.body.setAttribute('data-bs-theme', theme);
-    });
-</script>
     <style>
         body { font-family: 'Roboto', sans-serif; transition: background 0.3s ease; }
         .separator { display: flex; align-items: center; text-align: center; color: #6c757d; }

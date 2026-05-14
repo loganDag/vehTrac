@@ -6,6 +6,7 @@ require("$DocRoot/includes/menu.html");
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+$CookieTheme = $_COOKIE['SiteTheme']; 
 $ErrorMessage = [];
 $UserTheme =  "";
 $UserID = $_SESSION["user_id"];
@@ -23,7 +24,7 @@ $UserID = $_SESSION["user_id"];
             $stmt->bind_param('ss', $theme, $UserID);
             $result = $stmt->execute();
             if ($result){
-                $ErrorMessage[] = 'Saved applied theme!';
+                $ErrorMessage[] = 'Saved applied theme! This will take effect on your next login.';
             }else{
                 $ErrorMessage[] = "We were unable to save your theme, please try again!";
             }
@@ -35,7 +36,7 @@ $UserID = $_SESSION["user_id"];
             VehTrac | Profile Settings
         </title>
     </head>
-<body data-bs-theme="<?php echo $theme;?>">
+<body data-bs-theme="<?php echo $_COOKIE['SiteTheme'] ?? 'light';?>">
     <div class="main_site_content">
         <div class="text-center">
         <h2 class="jumbotron">Account Settings:</h2>
@@ -103,11 +104,4 @@ $UserID = $_SESSION["user_id"];
     </div> <!--END MAIN SITE CONTENT DIV-->
 </body>
 <?php require("$DocRoot/includes/footer.html"); ?>
-<script>
-    // Theme Toggle Script
-    document.getElementById('themeMemorySync_Dark').addEventListener('change', function() {
-        const theme = this.checked ? 'dark' : 'light';
-        document.body.setAttribute('data-bs-theme', theme);
-    });
-</script>
 </html>
