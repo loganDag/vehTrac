@@ -8,6 +8,8 @@ one of my advanced projects to date. I was orginally going to keep it private, t
 ### Social
 There are many ways to keep up with everyone, you can use the discord [Here](https://discord.com/invite/ZdZ6VAEgtZ) along with the discussions tab as well. We also have a Telegram update Channel [Here](https://t.me/LDDtelegram) for more.
 
+### Status
+To view the status of the website and project, visit [Here.](https://blog.logandag.dev) Up-to-date information and security issues will be listed here along with a FAQ.
 
 ### Stats:
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/loganDag/vehTrac) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/loganDag/vehTrac) ![GitHub contributors](https://img.shields.io/github/contributors/loganDag/vehTrac)
