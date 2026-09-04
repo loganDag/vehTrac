@@ -13,7 +13,15 @@ $email = $_GET["email"];
     $ErrorMessage[] = "Seems like the email is not in the URL. Please check the link again.";
 }
 
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 if (isset($_POST["reset_email"])){
+    
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+    die('Invalid request');
+}
     if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
         $IP = $_SERVER['HTTP_CF_CONNECTING_IP'];
     }else{
@@ -135,6 +143,7 @@ $conn->close();
             <h1>VehTrac Reset Password step 2</h1>
         </div>
         <form action="" method="post">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                 <div class="form-floating mb-3">
                         <input type="email" class="form-control" 
                                id="old_email" name="old_email" placeholder="name@example.com" required 

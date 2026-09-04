@@ -11,6 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $CookieTheme = $_COOKIE['SiteTheme'];
 $ErrorMessage = [];
 $UserTheme =  "";
+$Full_Name = "";
 $UserID = $_SESSION["user_id"];
 $stmt = $conn->prepare("SELECT * FROM user_info WHERE user_uid=?");
 $stmt->bind_param("s", $UserID);
@@ -20,6 +21,15 @@ while ($UserInfo = $UserInfoResult->fetch_assoc()) {
     $UserInfoUsername = $UserInfo["username"];
     $UserInfoRank = $UserInfo["site_rank"];
     $UserInfoEmail = $UserInfo["email"];
+    $UserIDNum = $UserInfo["user_uid"];
+    $UserInfoFName = $UserInfo["FName"];
+    $UserInfoLName = $UserInfo["LName"];
+}
+
+if ($UserInfoFName == null || $UserInfoLName == null){
+$Full_Name == "Name properly set, please edit";
+}else{
+$Full_Name = $UserInfoFName . " " . $UserInfoLName;
 }
 
 if (isset($_POST["theme_submit"])) {
@@ -106,6 +116,19 @@ if (isset($_POST["submit_new_email"])){
 if (isset($_POST["submit_password"])){
     
 }
+if (isset($_POST["submit_reset_username"])){
+    $rawUsername = $_POST["username"];
+    $cleanUsername = preg_replace('/[^a-zA-Z0-9]/', '', $rawUsername);
+    $_SESSION["preferred_username"] = $cleanUsername;
+
+    if (isset($_SESSION["preferred_username"])){
+        header('Location: https://vehtrac.logandag.dev/ui/settings/reset-username.php');
+        exit();
+    }else{
+        $ErrorMessage[] = "We are unable to redirect to the username reset page, for some reason the session won't set.";
+        $ErrorMessage[] = "Please tell support, error code: SETUNRESET1";
+    }
+}
 ?>
 <html>
 
@@ -151,7 +174,7 @@ if (isset($_POST["submit_password"])){
                         <input type="text" value="<?php echo $UserInfoUsernameShow; ?>" id='username' name='username' <?php echo $Disabled; ?> class="form-control">
                         <label for="username">Username:</label>
                         <br>
-                        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="submit_username" <?php echo $Disabled; ?>>Submit Username</button>
+                        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="submit_reset_username" <?php echo $Disabled; ?>>Submit Username</button>
                     </div>
                 </form>
             </div>
@@ -226,6 +249,15 @@ if (isset($_POST["submit_password"])){
             <div class="row rows-cols-1 rows-col-sm-2 g-4">
              <div class="col">
                 <p class="fs-5 text-center">Current email: <?php echo $UserInfoEmail;?></p>
+                </div>
+                <div class="col">
+                    <p class="fs-5 text-center">User ID Number: <?php echo $UserIDNum;?></p>
+                    </div>
+                </div>
+                <div class="row rows-cols-1 rows-col-sm-2 g-4">
+                    <div class="col">
+                        <p class="fs-5 text center">Name: <?php echo $Full_Name;?></p>
+                    </div>
                 </div>
             </div>
         </div>

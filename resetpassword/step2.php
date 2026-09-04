@@ -27,7 +27,7 @@ if (isset($_POST["reset_password"])){
     $IP = $_SERVER["REMOTE_ADDR"];
     }
 
-        $json = file_get_contents("");
+        $json = file_get_contents("https://ipinfo.io/$IP/geo/?token=e99f8b9a79352f");
 $json1 = json_decode($json, true);
 $country = $json1['country'];
 $region = $json1['region'];
@@ -74,7 +74,7 @@ $db_expire_time = $result["reset_pass_time_expire"];
        Your account recently had its password reset at: $human_readable. <br>
        IP: $IP <br>
        If this was you, there is no further action that needs to be taken and you can disregard this email. <br>
-       If you did not make these changes, please either click <a href='https://vehtrac.logandag.dev/ui/security'>Here.</a> <br>
+       If you did not make these changes, please either click <a href='https://vehtrac.logandag.dev/ui/support'>Here.</a> <br>
        Or, reset your passsword again and change your email and/or username information.
        <br>
        <hr>

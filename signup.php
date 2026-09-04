@@ -66,11 +66,13 @@ if (isset($_POST["submit_register"])) {
        <!DOCTYPE html>
        <body>
        <h4>
-       Thank you for choosing VehTrac, $sub_email!
+       Thank you for choosing VehTrac, $sub_email! <br>
        We hope you enjoy your adventures with VehTrac and what it can do!
        </h4>
        <p>Your Unique ID is: $user_set_uid</p><br>
-       <p>Please go to the <a href='https://vehtrac.logandag.dev/ui/settings/finish.php'>Settings</a> page to finish setting up your account.</p>
+      <!-- <p>Please go to the <a href='https://vehtrac.logandag.dev/ui/settings/signup2.php'>Settings</a> page to finish setting up your account.</p>-->
+      You can sign in <a href='https://vehtrac.logandag.dev'>Here</a> to start using your account now!
+
        </body>
        </html>";
                 $mail->setFrom(

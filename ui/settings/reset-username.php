@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+$DocRoot = $_SERVER["DOCUMENT_ROOT"];
 /// This is the "Settings" page username reset feture.
 /// This will use the email from the session_start in order to change with the database
 /// The "Forgot Username" page will require the email in order to obtain, NOT reset, the username.
@@ -14,7 +15,12 @@ require_once $vehtracRoot . "/includes/header.php";
 require_once $vehtracRoot . "/includes/cookieCheck.php";
 // 3. Start session safely
 $user_email = $_SESSION["email"];
-
+$preferred_username = $_SESSION["preferred_username"];
+if (isset($preferred_username)){
+    $pre_set = "true";
+}else{
+    $pre_set = "false";
+}
 
 // Placeholder message variable
 $message = "";
@@ -113,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <form method="POST">
                         <div class="mb-3">
                             <label class="form-label">New Username</label>
-                            <input type="text" name="new-username" class="form-control" placeholder="Enter new username">
+                            <input type="text" name="new-username" class="form-control" autocomplete="off" <?php if ($pre_set == "true"){echo "value='$preferred_username'";}else{echo "value=''";}?>>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Your Password</label>
@@ -125,8 +131,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
                             Reset Username
-                        </button>
+                        </button>                  
                     </form>
+                    <a href="https://vehtrac.logandag.dev/ui/dash" role="button" class="btn btn-primary w-100" style="color:white;">Go Home</a>
+                    <br>
                     <br>
                     <h5 class="text-muted">Requirements:</h5>
                     <br>
