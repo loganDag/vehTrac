@@ -70,9 +70,15 @@ if (isset($_POST["submit_register"])) {
        We hope you enjoy your adventures with VehTrac and what it can do!
        </h4>
        <p>Your Unique ID is: $user_set_uid</p><br>
-      <!-- <p>Please go to the <a href='https://vehtrac.logandag.dev/ui/settings/signup2.php'>Settings</a> page to finish setting up your account.</p>-->
-      You can sign in <a href='https://vehtrac.logandag.dev'>Here</a> to start using your account now!
-
+      <p>Please go to the <a href='https://vehtrac.logandag.dev/ui/settings/signup2.php?user_uid=$user_set_uid'>Registration completion</a> page to finish setting up your account.</p>
+        <p>If the link does not work, please copy and paste the following into your browser: <br>
+        https://vehtrac.logandag.dev/ui/settings/signup2.php?user_uid=$user_set_uid</p>
+       <br>
+       <p>Best regards, <br>
+       VehTrac Administration <br>
+       May God Bless and Keep you!
+       </p>
+       
        </body>
        </html>";
                 $mail->setFrom(
