@@ -129,6 +129,9 @@ if (isset($_POST["submit_reset_username"])){
         $ErrorMessage[] = "Please tell support, error code: SETUNRESET1";
     }
 }
+if (isset($_POST["submit_delete"])){
+    
+}
 ?>
 <html>
 
@@ -256,9 +259,17 @@ if (isset($_POST["submit_reset_username"])){
                 </div>
                 <div class="row rows-cols-1 rows-col-sm-2 g-4">
                     <div class="col">
-                        <p class="fs-5 text center">Name: <?php echo $Full_Name;?></p>
+                        <p class="fs-5 text-center">Name: <?php echo $Full_Name;?></p>
+                    </div>
+                    <div class="col">
+                        <p class="fs-5 text-center">Username: <?php echo $UserInfoUsernameShow;?></p>
                     </div>
                 </div>
+                    <div class="col d-flex justify-content-center">
+                        <form action="" method="post"  class="w-100 d-flex justify-content-center">
+                        <button class="w-50 btn btn-lg btn-danger mb-3" type="submit" name="submit_delete">Delete Account</button>
+                        </form>
+                    </div>
             </div>
         </div>
     </div> <!--END MAIN SITE CONTENT DIV-->

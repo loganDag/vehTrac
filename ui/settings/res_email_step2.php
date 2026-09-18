@@ -77,7 +77,7 @@ $db_expire_time = $result["reset_email_expire"];
        Your account recently had its email reset at: $human_readable. <br>
        From IP: $IP <br>
        If this was you, there is no further action that needs to be taken and you can disregard this email. <br>
-       If you did not make these changes, please click <a href='https://vehtrac.logandag.dev/ui/support'>Here.</a> or contact support.<br>
+       If you did not make these changes, please click <a href='https://vehtrac.logandag.dev/ui/support'>Here.</a> to contact support.<br>
        <br>
        <hr>
        Location details of device who reset your email: <br>
