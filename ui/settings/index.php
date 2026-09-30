@@ -133,23 +133,17 @@ if (isset($_POST["submit_delete"])){
     
 }
 ?>
-<html>
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>
-        VehTrac | Profile Settings
-    </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VehTrac | Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body data-bs-theme="<?php echo $_COOKIE['SiteTheme'] ?? 'light'; ?>">
-    <div class="main_site_content h-100">
-        <div class="text-center">
-            <h2 class="jumbotron">Account Settings:</h2>
-        </div>
-
-        <a name="sessions"></a>
         <?php
-        require("$DocRoot/BackPhp/DisplaySessions.php");
         if (!isset($UserInfoUsername)) {
             $UserInfoUsernameShow = "None set";
             $Disabled = "";
@@ -158,7 +152,6 @@ if (isset($_POST["submit_delete"])){
             $Disabled = "disabled";
         }
         ?>
-        <hr>
         <?php if (!empty($ErrorMessage)): ?>
             <div class="alert alert-info error-container w-100 align-items-center text-center">
                 <?php
@@ -167,88 +160,43 @@ if (isset($_POST["submit_delete"])){
                 ?>
             </div>
         <?php endif; ?>
-<div class="container">
-    <div class="row rows-cols-1 rows-col-sm-2 g-4">
-        <div class="col">
-            <div class="username_form">
-                <p class="fs-5 text-center">Reset Username:</p>
-                <form action="" method="post" class="d-flex flex-column align-items-center mt-3">
-                    <div class="form-floating mb-3 w-100">
-                        <input type="text" value="<?php echo $UserInfoUsernameShow; ?>" id='username' name='username' <?php echo $Disabled; ?> class="form-control">
-                        <label for="username">Username:</label>
-                        <br>
-                        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="submit_reset_username" <?php echo $Disabled; ?>>Submit Username</button>
-                    </div>
-                </form>
+
+<div class="container mt-5">
+    
+    <div class="row">
+        <!-- 1. THE SIDEBAR / TOP BAR (Full width on mobile, 3/12 columns on desktop) -->
+        <div class="col-12 col-md-3 mb-3 mb-md-0">
+            
+            <!-- 
+              nav-pills setup:
+              - flex-row flex-nowrap overflow-x-auto: scrollable horizontal row on mobile
+              - flex-md-column: snaps to vertical sidebar on desktop (md screens and up)
+              - gap-1: clean spacing between buttons in both directions
+            -->
+            <div class="nav nav-pills flex-row flex-nowrap overflow-x-auto flex-md-column border rounded p-2 bg-body-tertiary gap-1" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                
+                <button class="nav-link active text-nowrap text-md-start" id="tab-profile" data-bs-toggle="pill" data-bs-target="#content-profile" type="button" role="tab">Profile Info</button>
+                
+                <button class="nav-link text-nowrap text-md-start" id="tab-account" data-bs-toggle="pill" data-bs-target="#content-account" type="button" role="tab">Account Mgmt</button>
+                
+                <button class="nav-link text-nowrap text-md-start" id="tab-security" data-bs-toggle="pill" data-bs-target="#content-security" type="button" role="tab">Security</button>
+                
+                <button class="nav-link text-nowrap text-md-start" id="tab-preferences" data-bs-toggle="pill" data-bs-target="#content-preferences" type="button" role="tab">Preferences</button>
+
             </div>
         </div>
 
-        <div class="col">
-            <div class="reset_password">
-                <p class="fs-5 text-center">Reset Password:</p>
-                <form action="" method="post" class="d-flex flex-column align-items-center mt-3">
-                    <div class="form-floating mb-3 w-100">
-                        <input type="password" id='reset_pass_new' name='reset_pass_new' class="form-control" <?php echo $PassDisable; ?>>
-                        <label for="reset_pass_new">New Password:</label>
-                    </div>
-                    <div class="form-floating mb-3 w-100">
-                        <input type="password" id='reset_pass_confirm' name='reset_pass_confirm' class="form-control" <?php echo $PassDisable; ?>>
-                        <label for="reset_pass_confirm">Confirm Password:</label>
-                        <br>
-                        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="submit_password" <?php echo $PassDisable; ?>>Reset Password</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-            <div class="col">
-                <div class="change_email">
-                  
-                <p class="fs-5 text-center">Change Email:</p>
-                <form action="" method="post" class="d-flex flex-column align-items-center mt-3">
-                    <div class="form-floating mb-3 w-100">
-                        <input type="email" id='new_email' name='new_email' class="form-control">
-                        <label for="new_email">New Email:</label>
-                    </div>
-                    <div class="form-floating mb-3 w-100">
-                        <input type="email" id='reset_email_confirm' name='reset_email_confirm' class="form-control">
-                        <label for="reset_email_confirm">Confirm New Email:</label>
-                        <br>
-                        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="submit_new_email">Start reset process</button>
-                    </div>
-                </form>
-            </div>
-            </div>
-            <div class="col">
-        <div class="theme-switch d-flex flex-column align-items-center text-center">
-            <p class="fs-5">Display Theme:</p>
-            <span class="fs-6 text-muted">Choose a theme to sync across your account for devices.</span>
-            <form class="d-flex flex-column align-items-center mt-3" action="" method="post">
+        <!-- 2. THE MAIN CONTENT (Full width on mobile, 9/12 columns on desktop) -->
+        <div class="col-12 col-md-9">
+            
+            <!-- Tab content container -->
+            <div class="tab-content border rounded p-4 shadow-sm" id="v-pills-tabContent">
+                
+                <!-- Profile Content -->
+                <div class="tab-pane fade show active" id="content-profile" role="tabpanel">
+                    <h3 class="border-bottom pb-2 mb-3">Profile Information</h3>
 
-                <!-- Light Theme Radio Option -->
-                <div class="form-check form-switch mb-2">
-                    <input class="form-check-input" type="radio" id="theme_light" name="theme_choice" value="light" checked>
-                    <label class="form-check-label" for="theme_light">Light theme.</label>
-                </div>
-
-                <!-- Dark Theme Radio Option -->
-                <div class="form-check form-switch mb-2">
-                    <input class="form-check-input" type="radio" id="theme_dark" name="theme_choice" value="dark">
-                    <label class="form-check-label" for="theme_dark">Dark theme.</label>
-                </div>
-
-                <button type="submit" class="btn btn-primary" name="theme_submit">Save theme choice</button>
-             </form>
-        </div>
-        </div>
-        </div>
-        <hr>
-        <br />
-        <br />
-        </div>
-                <div class="text-center">
-            <h2 class="jumbotron">Profile Information:</h2>
-        </div>
-        <div class="container">
+                            <div class="container">
             <div class="row rows-cols-1 rows-col-sm-2 g-4">
              <div class="col">
                 <p class="fs-5 text-center">Current email: <?php echo $UserInfoEmail;?></p>
@@ -265,15 +213,103 @@ if (isset($_POST["submit_delete"])){
                         <p class="fs-5 text-center">Username: <?php echo $UserInfoUsernameShow;?></p>
                     </div>
                 </div>
-                    <div class="col d-flex justify-content-center">
+            </div>
+                </div>
+
+                <!-- Account Content -->
+                <div class="tab-pane fade" id="content-account" role="tabpanel">
+                    <h3 class="border-bottom pb-2 mb-3">Account Management</h3>
+                    <!--change email-->
+                <div class="change_email">
+                  
+                <p class="fs-5 text-center">Change Email:</p>
+                <form action="" method="post" class="d-flex flex-column align-items-center mt-3">
+                    <div class="form-floating mb-3 w-100">
+                        <input type="email" id='new_email' name='new_email' class="form-control">
+                        <label for="new_email">New Email:</label>
+                    </div>
+                    <div class="form-floating mb-3 w-100">
+                        <input type="email" id='reset_email_confirm' name='reset_email_confirm' class="form-control">
+                        <label for="reset_email_confirm">Confirm New Email:</label>
+                        <br>
+                        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="submit_new_email">Start reset process</button>
+                    </div>
+                </form>
+            </div>
+<!--change username-->
+            <div class="username_form">
+                <p class="fs-5 text-center">Reset Username:</p>
+                <form action="" method="post" class="d-flex flex-column align-items-center mt-3">
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" value="<?php echo $UserInfoUsernameShow; ?>" id='username' name='username' <?php echo $Disabled; ?> class="form-control">
+                        <label for="username">Username:</label>
+                        <br>
+                        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="submit_reset_username" <?php echo $Disabled; ?>>Submit Username</button>
+                    </div>
+                </form>
+            </div>
+
+                </div>
+
+                <!-- Security Content -->
+                <div class="tab-pane fade" id="content-security" role="tabpanel">
+                    <h3 class="border-bottom pb-2 mb-3">Security</h3>
+                                        <!--List active sessions-->
+                     <?php  require("$DocRoot/BackPhp/DisplaySessions.php"); ?>
+                   <!--Reset Password-->
+                        <div class="reset_password">
+                <p class="fs-5 text-center">Reset Password:</p>
+                <form action="" method="post" class="d-flex flex-column align-items-center mt-3">
+                    <div class="form-floating mb-3 w-100">
+                        <input type="password" id='reset_pass_new' name='reset_pass_new' class="form-control" <?php echo $PassDisable; ?>>
+                        <label for="reset_pass_new">New Password:</label>
+                    </div>
+                    <div class="form-floating mb-3 w-100">
+                        <input type="password" id='reset_pass_confirm' name='reset_pass_confirm' class="form-control" <?php echo $PassDisable; ?>>
+                        <label for="reset_pass_confirm">Confirm Password:</label>
+                        <br>
+                        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="submit_password" <?php echo $PassDisable; ?>>Reset Password</button>
+                    </div>
+                </form>
+            </div>
+            <!--Delete account-->
+                                <div class="col d-flex justify-content-center">
                         <form action="" method="post"  class="w-100 d-flex justify-content-center">
                         <button class="w-50 btn btn-lg btn-danger mb-3" type="submit" name="submit_delete">Delete Account</button>
                         </form>
                     </div>
+                </div>
+
+                <!-- Preferences Content -->
+                <div class="tab-pane fade" id="content-preferences" role="tabpanel">
+                    <h3 class="border-bottom pb-2 mb-3">Preferences</h3>
+          <span class="fs-6 text-muted">Choose a theme to sync across your account for devices.</span>
+            <form class="d-flex flex-column align-items-center mt-3" action="" method="post">
+
+                <!-- Light Theme Radio Option -->
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="radio" id="theme_light" name="theme_choice" value="light" checked>
+                    <label class="form-check-label" for="theme_light">Light theme.</label>
+                </div>
+
+                <!-- Dark Theme Radio Option -->
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="radio" id="theme_dark" name="theme_choice" value="dark">
+                    <label class="form-check-label" for="theme_dark">Dark theme.</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" name="theme_submit">Save theme choice</button>
+             </form>
+                </div>
+                
             </div>
         </div>
-    </div> <!--END MAIN SITE CONTENT DIV-->
-</body>
-<?php require("$DocRoot/includes/footer.html"); ?>
+        
+    </div>
+</div>
 
+<!-- Bootstrap JS is REQUIRED for data-bs-toggle to work -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
 </html>
