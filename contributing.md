@@ -6,6 +6,9 @@ First off, thank you for wanting to contribute to this project and may God bless
 
 If you want to contribute to development, you can clone or fork this repo and makes the changes yourself, I do ask please make an "Issue" first with the appropriate tags and then do so from there so it can be easily tracked. I also ask to keep development right now to HTML 5, CSS, BootStrap, JavaScript, PHP 8, and MySql.
 
+## AI contributions
+
+If you contribute and your code and/or documentation has any AI (Aritifical Intelligence) including in it, please mark those sections as AI made or AI used. If it is found out you did use AI and did makr as such, said code and/or documentation may not be used.
 
 ## Feedback
 If you want to contribute via feedback on current versions or other things, i.e. current code or development, please also either make an issue or bring it up in the discussions as well either here or on Discord.
