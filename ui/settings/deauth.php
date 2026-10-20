@@ -13,7 +13,7 @@ if ($stmt->execute() == false){
 echo "Unable to update the session, redirecting to settings page now.";
 header ('refresh: 3 /ui/settings');
 }else{
-    header('refresh: 1 /ui/settings');
+    header('Location: /ui/settings');
 }
 
 ?>
