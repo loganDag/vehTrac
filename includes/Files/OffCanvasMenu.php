@@ -13,7 +13,7 @@
         <p class="text-muted">You have <?php echo $CarNumber;?> Car(s) entered</p>
                 <ul class="nav flex-column">
                      <li class="nav-item"><a class="nav-link nav-item text-muted Off_menu_link" href='/ui/settings'><i class="bi bi-arrow-right-circle"></i> Account Settings</a></li>
-                     <li class="nav-item"><a class="nav-link nav-item text-muted Off_menu_link" href='/ui/settings/index.php#sessions'><i class="bi bi-arrow-right-circle"></i> Current sessions</a></li>
+                     <li class="nav-item"><a class="nav-link nav-item text-muted Off_menu_link" href='/ui/settings/index.php#content-security'><i class="bi bi-arrow-right-circle"></i> Current sessions</a></li>
                     <li class="nav-item"><a class="nav-link nav-item text-muted Off_menu_link" href='/ui/drive'><i class="bi bi-arrow-right-circle"></i> Drives</a></li> 
                      <li class= "nav-item"><a class="nav-link nav-item text-muted Off_menu_link" href='/ui/logout'><i class="bi bi-arrow-right-circle"></i> Logout</a></li>
              </ul>

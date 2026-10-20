@@ -310,6 +310,22 @@ if (isset($_POST["submit_delete"])){
 
 <!-- Bootstrap JS is REQUIRED for data-bs-toggle to work -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // 1. Get the hash from the URL (e.g., "#settings")
+    const hash = window.location.hash;
+    
+    if (hash) {
+      // 2. Find the pill button that targets this specific content ID
+      const targetTrigger = document.querySelector(`[data-bs-target="${hash}"]`);
+      
+      if (targetTrigger) {
+        // 3. Initialize and trigger the Bootstrap Tab/Pill instance
+        const tab = new bootstrap.Tab(targetTrigger);
+        tab.show();
+      }
+    }
+  });
+</script>
 </body>
 </html>
