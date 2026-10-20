@@ -132,6 +132,18 @@ if (isset($_POST["submit_reset_username"])){
 if (isset($_POST["submit_delete"])){
     
 }
+if (isset($_POST["submit_new_name"])){
+    $FName = $_POST["FName"];
+    $LName = $_POST["LName"];
+    $stmt = $conn->prepare("UPDATE user_info SET FName = ?, LName = ? WHERE user_uid = ?");
+    $stmt->bind_param("sss", $FName, $LName, $UserID);
+    $result = $stmt->execute();
+    if ($result){
+        $ErrorMessage[] = "Successfully updated your name!";
+    }else{
+        $ErrorMessage[] = "There was an error updating your name, please try again. Error code: SETNAME1";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -219,6 +231,22 @@ if (isset($_POST["submit_delete"])){
                 <!-- Account Content -->
                 <div class="tab-pane fade" id="content-account" role="tabpanel">
                     <h3 class="border-bottom pb-2 mb-3">Account Management</h3>
+                    <!--change name-->
+                    <div class="change_name">
+                <p class="fs-5 text-center">Change Name:</p>
+                <form action="" method="post" class="d-flex flex-column align-items-center mt-3">
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" id='FName' name='FName' class="form-control">
+                        <label for="FName">First Name:</label>
+                    </div>
+                    <div class="form-floating mb-3 w-100">
+                        <input type="text" id='LName' name='LName' class="form-control">
+                        <label for="LName">Last Name:</label>
+                        <br>
+                        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" name="submit_new_name">Submit Name</button>
+                    </div>
+                </form>
+            </div>
                     <!--change email-->
                 <div class="change_email">
                   
