@@ -37,7 +37,7 @@ if (isset($_POST["submit_register"])) {
             $reg_date = date('Y-m-d H:i:s');
             $site_rank = "0";
             $sub_tier = "1";
-            $lock_status = "0";
+            $lock_status = "4";
             $stmt = $conn->prepare(
                 "INSERT INTO user_info (user_uid, email, password, site_rank, sub_tier, register_date, lock_status) VALUES (?, ?, ?, ?, ?, ?, ?)"
             );
@@ -59,6 +59,24 @@ if (isset($_POST["submit_register"])) {
                     $conn->error;
                 echo "Please <a href='mailto:contact@logandag.dev?subject=VehTrac signup issue with db.'>Email Support Here</a></div>";
             } else {
+                $reg_code_ran = rand(1, 10000);
+                $stmt = $conn->prepare(
+                    "INSERT INTO user_reg_codes (user_uid, reg_code, time_submit) VALUES (?, ?, ?)"
+                );
+                $stmt->bind_param(
+                    "iss",
+                    $user_set_uid,
+                    $reg_code_ran,
+                    $reg_date
+                );
+                $stmt->execute();
+                if($stmt->execute() == false){
+                    echo "<div class='d-flex align-items-center justify-content-center'>";
+                    echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Sign up issue</h3>";
+                    echo "Unable to insert your registration code.<br></b>" . $conn->error;
+                    echo "Please <a href='mailto:contact@logandag.dev?subject=VehTrac signup issue with reg codes.'>Email Support Here</a></div>";
+
+                }else{
                 echo "<div class='alert alert-success text-center' role='alert'> <p>User created, please go to settings to finish your account.</p>";
                 echo "Please expect an email with your User UID and email with a welcome letter. Thank you again!</div>";
                 //$Body = require ('EmailTemps/registrationEmail.php');
@@ -74,6 +92,7 @@ if (isset($_POST["submit_register"])) {
         <p>If the link does not work, please copy and paste the following into your browser: <br>
         https://vehtrac.logandag.dev/ui/settings/signup2.php?user_uid=$user_set_uid</p>
        <br>
+       <p>Please use the following code: <b>$reg_code_ran</b> to complete your registration in the link above.</p>
        <p>Best regards, <br>
        VehTrac Administration <br>
        May God Bless and Keep you!
@@ -98,6 +117,7 @@ if (isset($_POST["submit_register"])) {
                     echo "<div class='alert alert-success text-center' role='alert'> <p>Welcome Letter sent!</p></div>";
                 }
             }
+                }
         } elseif (isset($db_email)) {
             echo "<div class='d-flex align-items-center justify-content-center'>";
             echo "<div class='alert alert-danger text-center' role='alert'> <h3 class='alert-header'>Sign up issue</h3>";
