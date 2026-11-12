@@ -18,7 +18,7 @@ If you believe you can fix it or have a fix, please let us know is the *Issue* d
 V0.2.0 - Stable Release
 
 ### Unsupported versions:
- ~~v.0.1.0 - Alpha~~
+ v.0.1.0 - Alpha
 
 
  ### Meanings
