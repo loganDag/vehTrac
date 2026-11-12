@@ -15,8 +15,11 @@ If you believe you can fix it or have a fix, please let us know is the *Issue* d
 
 ### Current Supported Versions:
 
-v.0.1.0 - Alpha
+V0.2.0 - Stable Release
 
 ### Unsupported versions:
+ ~~v.0.1.0 - Alpha~~
 
-None
+
+ ### Meanings
+> ~~strike through~~ - Code does not exist or not easily accessible or no known back up exists. Items not struck through have backups or fork made for support to be made easier if ***Absolutely*** necessary or for public view.
